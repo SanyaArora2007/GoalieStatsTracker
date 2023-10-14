@@ -9,10 +9,16 @@ import SwiftUI
 
 struct RecordStatsView: View {
     
-    @State private var color1 : Color = Color.gray
-    @State private var color2 : Color = Color.gray
-    @State private var color3 : Color = Color.gray
-    @State private var color4 : Color = Color.gray
+    static let colorGoal = Color.red
+    static let colorSave = Color.green
+    static let colorClear = Color.blue
+    static let color8Meter = Color.orange
+    static let colorNeutral = Color.gray
+    
+    @State private var colorGoalButton : Color = colorNeutral
+    @State private var colorSaveButton : Color = colorNeutral
+    @State private var colorClearButton : Color = colorNeutral
+    @State private var color8MeterButton : Color = colorNeutral
     
     @State var pointsOn12Meter: [CGPoint] = []
     @State var pointsOnGoal: [CGPoint] = []
@@ -36,7 +42,10 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color1 = Color.green
+                    colorGoalButton = RecordStatsView.colorGoal
+                    colorSaveButton = RecordStatsView.colorNeutral
+                    colorClearButton = RecordStatsView.colorNeutral
+                    color8MeterButton = RecordStatsView.colorNeutral
                 }
             }
     }
@@ -45,7 +54,10 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color2 = Color.green
+                    colorGoalButton = RecordStatsView.colorNeutral
+                    colorSaveButton = RecordStatsView.colorSave
+                    colorClearButton = RecordStatsView.colorNeutral
+                    color8MeterButton = RecordStatsView.colorNeutral
                 }
             }
     }
@@ -54,7 +66,10 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color3 = Color.green
+                    colorGoalButton = RecordStatsView.colorNeutral
+                    colorSaveButton = RecordStatsView.colorNeutral
+                    colorClearButton = RecordStatsView.colorClear
+                    color8MeterButton = RecordStatsView.colorNeutral
                 }
             }
     }
@@ -63,7 +78,10 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color4 = Color.green
+                    colorGoalButton = RecordStatsView.colorNeutral
+                    colorSaveButton = RecordStatsView.colorNeutral
+                    colorClearButton = RecordStatsView.colorNeutral
+                    color8MeterButton = RecordStatsView.color8Meter
                 }
             }
     }
@@ -75,7 +93,7 @@ struct RecordStatsView: View {
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(color1)
+                        .foregroundColor(colorGoalButton)
                         .opacity(0.5)
                         .gesture(tapGoalGesture)
                     Text("Goal")
@@ -85,7 +103,7 @@ struct RecordStatsView: View {
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(color2)
+                        .foregroundColor(colorSaveButton)
                         .opacity(0.5)
                         .gesture(tapSaveGesture)
                     Text("Save")
@@ -95,7 +113,7 @@ struct RecordStatsView: View {
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(color3)
+                        .foregroundColor(colorClearButton)
                         .opacity(0.5)
                         .gesture(tapClearGesture)
                     Text("Clear")
@@ -105,7 +123,7 @@ struct RecordStatsView: View {
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(color4)
+                        .foregroundColor(color8MeterButton)
                         .opacity(0.5)
                         .gesture(tap8MeterGesture)
                     Text("8 Meter")
