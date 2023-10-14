@@ -20,7 +20,7 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color1 = Color.red
+                    color1 = Color.green
                 }
             }
     }
@@ -29,7 +29,7 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color2 = Color.red
+                    color2 = Color.green
                 }
             }
     }
@@ -38,7 +38,7 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color3 = Color.red
+                    color3 = Color.green
                 }
             }
     }
@@ -47,7 +47,7 @@ struct RecordStatsView: View {
         TapGesture()
             .onEnded() {
                 withAnimation {
-                    color4 = Color.red
+                    color4 = Color.green
                 }
             }
     }
