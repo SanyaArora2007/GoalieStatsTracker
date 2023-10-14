@@ -14,12 +14,20 @@ struct RecordStatsView: View {
     @State private var color3 : Color = Color.gray
     @State private var color4 : Color = Color.gray
     
-    @State var points: [CGPoint] = []
+    @State var pointsOn12Meter: [CGPoint] = []
+    @State var pointsOnGoal: [CGPoint] = []
     
-    var drawCircle: some Gesture {
+    var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
-                points.append(event.location)
+                pointsOn12Meter.append(event.location)
+            }
+    }
+    
+    var drawGoalCircle: some Gesture {
+        SpatialTapGesture()
+            .onEnded() { event in
+                pointsOnGoal.append(event.location)
             }
     }
 
@@ -111,18 +119,27 @@ struct RecordStatsView: View {
                     .resizable()
                     .frame( width: 480, height: 330)
                 
-                ForEach(points, id: \.x) { point in
+                ForEach(pointsOn12Meter, id: \.x) { point in
                     ClickedCircle(currentLocation: point)
                 }
             }
             .contentShape(Rectangle())
-            .gesture(drawCircle)
+            .gesture(draw12MeterCircle)
             
             Divider()
             
-            Image("laxGoal")
-                .resizable()
-                .frame(width: 300, height: 350)
+            ZStack {
+                Image("laxGoal")
+                    .resizable()
+                    .frame(width: 300, height: 350)
+                
+                ForEach(pointsOnGoal, id: \.x) { point in
+                    ClickedCircle(currentLocation: point)
+                }
+            }
+            .contentShape(Rectangle())
+            .gesture(drawGoalCircle)
+            
         }
     }
 }
