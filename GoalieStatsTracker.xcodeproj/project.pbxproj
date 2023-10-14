@@ -16,7 +16,6 @@
 		03E507B72AC6795000134DD0 /* GoalieStatsTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507B62AC6795000134DD0 /* GoalieStatsTrackerTests.swift */; };
 		03E507C12AC6795000134DD0 /* GoalieStatsTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */; };
 		03E507C32AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */; };
-		03F3CE362AD869880075F3EF /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F3CE352AD869880075F3EF /* test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +48,6 @@
 		03E507BC2AC6795000134DD0 /* GoalieStatsTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoalieStatsTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITests.swift; sourceTree = "<group>"; };
 		03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		03F3CE352AD869880075F3EF /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +81,6 @@
 				03E507A72AC6794F00134DD0 /* ContentView.swift */,
 				038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */,
 				038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */,
-				03F3CE352AD869880075F3EF /* test.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -277,7 +274,6 @@
 				038BF2E92AC67DD00047DDF3 /* LoadPastView.swift in Sources */,
 				038BF2E62AC67D9F0047DDF3 /* RecordStatsView.swift in Sources */,
 				03E507A82AC6794F00134DD0 /* ContentView.swift in Sources */,
-				03F3CE362AD869880075F3EF /* test.swift in Sources */,
 				03E507A62AC6794F00134DD0 /* GoalieStatsTrackerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
