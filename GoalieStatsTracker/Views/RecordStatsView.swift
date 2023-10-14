@@ -23,6 +23,8 @@ struct RecordStatsView: View {
     @State var pointsOn12Meter: [CGPoint] = []
     @State var pointsOnGoal: [CGPoint] = []
     
+    @State var currentColor: Color = colorNeutral
+    
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
@@ -46,6 +48,8 @@ struct RecordStatsView: View {
                     colorSaveButton = RecordStatsView.colorNeutral
                     colorClearButton = RecordStatsView.colorNeutral
                     color8MeterButton = RecordStatsView.colorNeutral
+                    
+                    currentColor = colorGoalButton
                 }
             }
     }
@@ -58,6 +62,8 @@ struct RecordStatsView: View {
                     colorSaveButton = RecordStatsView.colorSave
                     colorClearButton = RecordStatsView.colorNeutral
                     color8MeterButton = RecordStatsView.colorNeutral
+                    
+                    currentColor = colorSaveButton
                 }
             }
     }
@@ -70,6 +76,8 @@ struct RecordStatsView: View {
                     colorSaveButton = RecordStatsView.colorNeutral
                     colorClearButton = RecordStatsView.colorClear
                     color8MeterButton = RecordStatsView.colorNeutral
+                    
+                    currentColor = colorClearButton
                 }
             }
     }
@@ -82,6 +90,8 @@ struct RecordStatsView: View {
                     colorSaveButton = RecordStatsView.colorNeutral
                     colorClearButton = RecordStatsView.colorNeutral
                     color8MeterButton = RecordStatsView.color8Meter
+                    
+                    currentColor = color8MeterButton
                 }
             }
     }
@@ -138,7 +148,7 @@ struct RecordStatsView: View {
                     .frame( width: 480, height: 330)
                 
                 ForEach(pointsOn12Meter, id: \.x) { point in
-                    ClickedCircle(currentLocation: point)
+                    ClickedCircle(currentLocation: point, circleColor: currentColor)
                 }
             }
             .contentShape(Rectangle())
@@ -152,7 +162,7 @@ struct RecordStatsView: View {
                     .frame(width: 300, height: 350)
                 
                 ForEach(pointsOnGoal, id: \.x) { point in
-                    ClickedCircle(currentLocation: point)
+                    ClickedCircle(currentLocation: point, circleColor: currentColor)
                 }
             }
             .contentShape(Rectangle())
@@ -164,13 +174,13 @@ struct RecordStatsView: View {
 
 struct ClickedCircle: View {
     
-
     @State var currentLocation: CGPoint
-    
+    @State var circleColor: Color
+
     var body: some View {
 
-        return Circle().fill(Color.red)
-            .frame(width: 20, height: 20)
+        return Circle().fill(circleColor)
+            .frame(width: 10, height: 10)
             .position(currentLocation)
     }
 }
