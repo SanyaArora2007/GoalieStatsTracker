@@ -21,7 +21,6 @@ struct RecordStatsView: View {
     @State private var color8MSaveButton : Color = colorNeutral
     
     @State var pointsOn12Meter: [CGPoint] = []
-    @State var pointsOnGoal: [CGPoint] = []
     
     @State var currentColor: Color = colorNeutral
     
@@ -31,14 +30,6 @@ struct RecordStatsView: View {
                 pointsOn12Meter.append(event.location)
             }
     }
-    
-    var drawGoalCircle: some Gesture {
-        SpatialTapGesture()
-            .onEnded() { event in
-                pointsOnGoal.append(event.location)
-            }
-    }
-
     
     var tapGoalGesture: some Gesture {
         TapGesture()
@@ -158,18 +149,8 @@ struct RecordStatsView: View {
             
             Divider()
             
-            ZStack {
-                Image("laxGoal")
-                    .resizable()
-                    .frame(width: 300, height: 350)
-                
-                ForEach(pointsOnGoal, id: \.x) { point in
-                    ClickedCircle(currentLocation: point, circleColor: currentColor)
-                }
-            }
-            .contentShape(Rectangle())
-            .gesture(drawGoalCircle)
-            
+            Spacer()
+                .frame(height: 340)
         }
     }
 }
