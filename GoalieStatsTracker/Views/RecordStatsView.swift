@@ -22,12 +22,18 @@ struct RecordStatsView: View {
     
     @State var pointsOn12Meter: [CGPoint] = []
     
+    @State var isGoal: Bool = false
+    @State var is8Meter: Bool = false
+    
     @State var currentColor: Color = colorNeutral
+    
+    var shotsData = ShotsData()
     
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
                 pointsOn12Meter.append(event.location)
+                shotsData.newShot(goal:isGoal, eightMeter:is8Meter, location:event.location)
             }
     }
     
@@ -41,6 +47,8 @@ struct RecordStatsView: View {
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
                     currentColor = colorGoalButton
+                    isGoal = true
+                    is8Meter = false
                 }
             }
     }
@@ -55,6 +63,8 @@ struct RecordStatsView: View {
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
                     currentColor = colorSaveButton
+                    isGoal = false
+                    is8Meter = false
                 }
             }
     }
@@ -69,6 +79,8 @@ struct RecordStatsView: View {
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
                     currentColor = color8MGoalButton
+                    isGoal = true
+                    is8Meter = true
                 }
             }
     }
@@ -83,6 +95,8 @@ struct RecordStatsView: View {
                     color8MSaveButton = RecordStatsView.color8MSave
                     
                     currentColor = color8MSaveButton
+                    isGoal = false
+                    is8Meter = true
                 }
             }
     }
@@ -138,7 +152,7 @@ struct RecordStatsView: View {
             ZStack {
                 Image("12MeterDiagram")
                     .resizable()
-                    .frame( width: 400, height: 240)
+                    .frame(width: 400, height: 240)
                 
                 ForEach(pointsOn12Meter, id: \.x) { point in
                     ClickedCircle(currentLocation: point, circleColor: currentColor)
