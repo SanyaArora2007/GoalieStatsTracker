@@ -9,16 +9,16 @@ import Foundation
 
 class ShotsData {
     struct Shot {
-        var goal: Bool
-        var eightMeter: Bool
-        var grid: Int
+        var wasItAgoal: Bool
+        var insideEightMeter: Bool
+        var gridItCameFrom: Int
     }
     
     var shots: [Shot] = []
     
     func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) {
         let grid = whichGrid(coordinate: location)
-        let shot = Shot(goal: goal, eightMeter: eightMeter, grid: grid)
+        let shot = Shot(wasItAgoal: goal, insideEightMeter: eightMeter, gridItCameFrom: grid)
         shots.append(shot)
         
         print("New shot \(goal), \(eightMeter), \(location), \(grid)")
