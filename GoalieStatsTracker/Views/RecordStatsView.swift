@@ -11,14 +11,14 @@ struct RecordStatsView: View {
     
     static let colorGoal = Color.red
     static let colorSave = Color.green
-    static let colorClear = Color.blue
-    static let color8Meter = Color.orange
+    static let color8MGoal = Color.purple
+    static let color8MSave = Color.mint
     static let colorNeutral = Color.gray
     
     @State private var colorGoalButton : Color = colorNeutral
     @State private var colorSaveButton : Color = colorNeutral
-    @State private var colorClearButton : Color = colorNeutral
-    @State private var color8MeterButton : Color = colorNeutral
+    @State private var color8MGoalButton : Color = colorNeutral
+    @State private var color8MSaveButton : Color = colorNeutral
     
     @State var pointsOn12Meter: [CGPoint] = []
     @State var pointsOnGoal: [CGPoint] = []
@@ -46,8 +46,8 @@ struct RecordStatsView: View {
                 withAnimation {
                     colorGoalButton = RecordStatsView.colorGoal
                     colorSaveButton = RecordStatsView.colorNeutral
-                    colorClearButton = RecordStatsView.colorNeutral
-                    color8MeterButton = RecordStatsView.colorNeutral
+                    color8MGoalButton = RecordStatsView.colorNeutral
+                    color8MSaveButton = RecordStatsView.colorNeutral
                     
                     currentColor = colorGoalButton
                 }
@@ -60,8 +60,8 @@ struct RecordStatsView: View {
                 withAnimation {
                     colorGoalButton = RecordStatsView.colorNeutral
                     colorSaveButton = RecordStatsView.colorSave
-                    colorClearButton = RecordStatsView.colorNeutral
-                    color8MeterButton = RecordStatsView.colorNeutral
+                    color8MGoalButton = RecordStatsView.colorNeutral
+                    color8MSaveButton = RecordStatsView.colorNeutral
                     
                     currentColor = colorSaveButton
                 }
@@ -74,10 +74,10 @@ struct RecordStatsView: View {
                 withAnimation {
                     colorGoalButton = RecordStatsView.colorNeutral
                     colorSaveButton = RecordStatsView.colorNeutral
-                    colorClearButton = RecordStatsView.colorClear
-                    color8MeterButton = RecordStatsView.colorNeutral
+                    color8MGoalButton = RecordStatsView.color8MGoal
+                    color8MSaveButton = RecordStatsView.colorNeutral
                     
-                    currentColor = colorClearButton
+                    currentColor = color8MGoalButton
                 }
             }
     }
@@ -88,10 +88,10 @@ struct RecordStatsView: View {
                 withAnimation {
                     colorGoalButton = RecordStatsView.colorNeutral
                     colorSaveButton = RecordStatsView.colorNeutral
-                    colorClearButton = RecordStatsView.colorNeutral
-                    color8MeterButton = RecordStatsView.color8Meter
+                    color8MGoalButton = RecordStatsView.colorNeutral
+                    color8MSaveButton = RecordStatsView.color8MSave
                     
-                    currentColor = color8MeterButton
+                    currentColor = color8MSaveButton
                 }
             }
     }
@@ -123,29 +123,31 @@ struct RecordStatsView: View {
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(colorClearButton)
+                        .foregroundColor(color8MGoalButton)
                         .opacity(0.5)
                         .gesture(tapClearGesture)
-                    Text("Clear")
+                    Text("8M Goal")
                         .font(.headline)
                 }
                 Spacer()
                 ZStack {
                     Rectangle()
                         .frame(width: 80, height: 40)
-                        .foregroundColor(color8MeterButton)
+                        .foregroundColor(color8MSaveButton)
                         .opacity(0.5)
                         .gesture(tap8MeterGesture)
-                    Text("8 Meter")
+                    Text("8M Save")
                         .font(.headline)
                 }
                 Spacer()
             }
+            Spacer()
+                .frame(height: 50)
             
             ZStack {
                 Image("12MeterDiagram")
                     .resizable()
-                    .frame( width: 480, height: 330)
+                    .frame( width: 400, height: 240)
                 
                 ForEach(pointsOn12Meter, id: \.x) { point in
                     ClickedCircle(currentLocation: point, circleColor: currentColor)
