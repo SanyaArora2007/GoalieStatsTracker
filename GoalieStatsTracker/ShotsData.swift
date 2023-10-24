@@ -8,20 +8,119 @@
 import Foundation
 
 class ShotsData {
+    
+    var runningScore: Float = 0
+    
     struct Shot {
-        var wasItAgoal: Bool
-        var insideEightMeter: Bool
+        var wasItAGoal: Bool
+        var wasItEightMeter: Bool
         var gridItCameFrom: Int
+        
+        func calculateScore() -> Float {
+            switch (gridItCameFrom) {
+            case 1:
+                if wasItAGoal == true {
+                    return -3
+                }
+                else {
+                    return 0.5
+                }
+                
+            case 2:
+                if wasItAGoal == true {
+                    if wasItEightMeter == true {
+                        return -1
+                    }
+                    else {
+                        return -2
+                    }
+                }
+                else {
+                    if wasItEightMeter == true {
+                        return 2
+                    }
+                    else {
+                        return 1
+                    }
+                }
+                
+            case 3:
+                if wasItAGoal == true {
+                    return -3
+                }
+                else {
+                    return 0.5
+                }
+                
+            case 4:
+                if wasItAGoal == true {
+                    if wasItEightMeter == true {
+                        return -1
+                    }
+                    else {
+                        return -1.5
+                    }
+                }
+                else {
+                    if wasItEightMeter == true {
+                        return 2.5
+                    }
+                    else {
+                        return 2
+                    }
+                }
+                
+            case 5:
+                if wasItAGoal == true {
+                    if wasItEightMeter == true {
+                        return -0.5
+                    }
+                    else {
+                        return -1
+                    }
+                }
+                else {
+                    if wasItEightMeter == true {
+                        return 3.5
+                    }
+                    else {
+                        return 3
+                    }
+                }
+                
+            case 6:
+                if wasItAGoal == true {
+                    if wasItEightMeter == true {
+                        return -1
+                    }
+                    else {
+                        return -1.5
+                    }
+                }
+                else {
+                    if wasItEightMeter == true {
+                        return 2.5
+                    }
+                    else {
+                        return 2
+                    }
+                }
+                
+            default:
+                return 0
+            }
+        }
     }
     
     var shots: [Shot] = []
     
     func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) {
         let grid = whichGrid(coordinate: location)
-        let shot = Shot(wasItAgoal: goal, insideEightMeter: eightMeter, gridItCameFrom: grid)
+        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid)
+        runningScore += shot.calculateScore()
         shots.append(shot)
         
-        print("New shot \(goal), \(eightMeter), \(location), \(grid)")
+        print("New shot \(goal), \(eightMeter), \(location), \(grid), \(runningScore)")
     }
     
     func whichGrid(coordinate: CGPoint) -> Int {
