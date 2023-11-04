@@ -7,9 +7,12 @@
 
 import Foundation
 
-class ShotsData {
+class ShotsData: ObservableObject {
     
-    var runningScore: Float = 0
+    @Published var runningScore: Float = 0
+    @Published var totalShots: Int = 0
+    @Published var saves: Int = 0
+    @Published var savePercentage: Int = 0
     
     struct Shot {
         var wasItAGoal: Bool
@@ -118,9 +121,17 @@ class ShotsData {
         let grid = whichGrid(coordinate: location)
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid)
         runningScore += shot.calculateScore()
-        shots.append(shot)
+        totalShots += 1
         
-        print("New shot \(goal), \(eightMeter), \(location), \(grid), \(runningScore)")
+        if goal == false {
+            saves += 1
+        }
+        else if goal == false && eightMeter == true {
+            saves += 1
+        }
+        savePercentage = Int((Float(saves) / Float(totalShots)) * 100)
+
+        shots.append(shot)
     }
     
     func whichGrid(coordinate: CGPoint) -> Int {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecordStatsView: View {
-    
+        
     static let colorGoal = Color.red
     static let colorSave = Color.green
     static let color8MGoal = Color.purple
@@ -27,7 +27,7 @@ struct RecordStatsView: View {
     
     @State var currentColor: Color = colorNeutral
     
-    var shotsData = ShotsData()
+    @StateObject var shotsData = ShotsData()
     
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
@@ -147,7 +147,7 @@ struct RecordStatsView: View {
                 Spacer()
             }
             Spacer()
-                .frame(height: 50)
+                .frame(height: 30)
             
             ZStack {
                 Image("12MeterDiagram")
@@ -158,6 +158,7 @@ struct RecordStatsView: View {
                     ClickedCircle(currentLocation: point, circleColor: currentColor)
                 }
             }
+            .fixedSize(horizontal: false, vertical: true)
             .contentShape(Rectangle())
             .gesture(draw12MeterCircle)
             
@@ -165,6 +166,11 @@ struct RecordStatsView: View {
             
             Spacer()
                 .frame(height: 340)
+            
+            Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+            Text("Saves: \(shotsData.saves)")
+            Text("Total Shots: \(shotsData.totalShots)")
+            Text("Save Percantage \(shotsData.savePercentage)%")
         }
     }
 }
