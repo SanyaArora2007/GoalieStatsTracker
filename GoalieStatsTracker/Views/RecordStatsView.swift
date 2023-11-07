@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecordStatsView: View {
         
+    
     static let colorGoal = Color.red
     static let colorSave = Color.green
     static let color8MGoal = Color.purple
@@ -19,6 +20,8 @@ struct RecordStatsView: View {
     @State private var colorSaveButton : Color = colorNeutral
     @State private var color8MGoalButton : Color = colorNeutral
     @State private var color8MSaveButton : Color = colorNeutral
+    
+    @State private var runningScoreColor: Color = Color.black
     
     @State var pointsOn12Meter: [CGPoint] = []
     
@@ -103,74 +106,99 @@ struct RecordStatsView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                ZStack {
-                    Rectangle()
-                        .frame(width: 80, height: 40)
-                        .foregroundColor(colorGoalButton)
-                        .opacity(0.5)
-                        .gesture(tapGoalGesture)
-                    Text("Goal")
-                        .font(.headline)
+            VStack {
+                Text("Goalie Name")
+                    .font(Font.largeTitle)
+                    .foregroundColor(Color.indigo)
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 80, height: 40)
+                            .foregroundColor(colorGoalButton)
+                            .opacity(0.5)
+                            .gesture(tapGoalGesture)
+                        Text("Goal")
+                            .font(.headline)
+                    }
+                    Spacer()
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 80, height: 40)
+                            .foregroundColor(colorSaveButton)
+                            .opacity(0.5)
+                            .gesture(tapSaveGesture)
+                        Text("Save")
+                            .font(.headline)
+                    }
+                    Spacer()
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 80, height: 40)
+                            .foregroundColor(color8MGoalButton)
+                            .opacity(0.5)
+                            .gesture(tapClearGesture)
+                        Text("8M Goal")
+                            .font(.headline)
+                    }
+                    Spacer()
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 80, height: 40)
+                            .foregroundColor(color8MSaveButton)
+                            .opacity(0.5)
+                            .gesture(tap8MeterGesture)
+                        Text("8M Save")
+                            .font(.headline)
+                    }
+                    Spacer()
                 }
-                Spacer()
-                ZStack {
-                    Rectangle()
-                        .frame(width: 80, height: 40)
-                        .foregroundColor(colorSaveButton)
-                        .opacity(0.5)
-                        .gesture(tapSaveGesture)
-                    Text("Save")
-                        .font(.headline)
-                }
-                Spacer()
-                ZStack {
-                    Rectangle()
-                        .frame(width: 80, height: 40)
-                        .foregroundColor(color8MGoalButton)
-                        .opacity(0.5)
-                        .gesture(tapClearGesture)
-                    Text("8M Goal")
-                        .font(.headline)
-                }
-                Spacer()
-                ZStack {
-                    Rectangle()
-                        .frame(width: 80, height: 40)
-                        .foregroundColor(color8MSaveButton)
-                        .opacity(0.5)
-                        .gesture(tap8MeterGesture)
-                    Text("8M Save")
-                        .font(.headline)
-                }
-                Spacer()
-            }
-            Spacer()
-                .frame(height: 30)
-            
-            ZStack {
-                Image("12MeterDiagram")
-                    .resizable()
-                    .frame(width: 400, height: 240)
                 
-                ForEach(pointsOn12Meter, id: \.x) { point in
-                    ClickedCircle(currentLocation: point, circleColor: currentColor)
+                ZStack {
+                    Image("12MeterDiagram")
+                        .resizable()
+                        .frame(width: 400, height: 240)
+                    
+                    ForEach(pointsOn12Meter, id: \.x) { point in
+                        ClickedCircle(currentLocation: point, circleColor: currentColor)
+                    }
                 }
+                .fixedSize(horizontal: false, vertical: true)
+                .contentShape(Rectangle())
+                .gesture(draw12MeterCircle)
+                
+                Divider()
+                
+                Spacer()
+                    .frame(height: 40)
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .contentShape(Rectangle())
-            .gesture(draw12MeterCircle)
             
-            Divider()
-            
-            Spacer()
-                .frame(height: 340)
-            
-            Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-            Text("Saves: \(shotsData.saves)")
-            Text("Total Shots: \(shotsData.totalShots)")
-            Text("Save Percantage \(shotsData.savePercentage)%")
+            VStack {
+                
+                if shotsData.runningScore < 0 {
+                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                        .foregroundColor(Color.red)
+                        .font(Font.title)                }
+                else if shotsData.runningScore > 0 {
+                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                        .foregroundColor(Color.blue)
+                        .font(Font.title)                }
+                else if shotsData.runningScore == 0 {
+                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                        .foregroundColor(Color.black)
+                        .font(Font.title)
+                }
+                
+                Text("Saves: \(shotsData.saves)   (\(shotsData.savePercentage)%)")
+                    .foregroundColor(Color.black)
+                    .font(Font.headline)
+                    .frame(alignment: .trailing)
+                
+                Text("Total Shots: \(shotsData.totalShots)")
+                    .foregroundColor(Color.black)
+                    .font(Font.headline)
+                    .frame(alignment: .trailing)
+            }
         }
     }
 }
