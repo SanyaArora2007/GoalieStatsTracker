@@ -6,15 +6,38 @@
 //
 
 import Foundation
+import SwiftUI
 
-class ShotsData: ObservableObject {
+class ShotsData: ObservableObject, Codable {
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
     @Published var saves: Int = 0
     @Published var savePercentage: Int = 0
     
-    struct Shot {
+    enum CodingKeys: CodingKey {
+        case runningScore, totalShots, saves, savePercentage
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(runningScore, forKey: .runningScore)
+        try container.encode(totalShots, forKey: .totalShots)
+        try container.encode(saves, forKey: .saves)
+        try container.encode(savePercentage, forKey: .savePercentage)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        runningScore = try container.decode(Float.self, forKey: .runningScore)
+        totalShots = try container.decode(Int.self, forKey: .totalShots)
+        saves = try container.decode(Int.self, forKey: .saves)
+        savePercentage = try container.decode(Int.self, forKey: .savePercentage)
+    }
+    
+    struct Shot: Codable {
         var wasItAGoal: Bool
         var wasItEightMeter: Bool
         var gridItCameFrom: Int

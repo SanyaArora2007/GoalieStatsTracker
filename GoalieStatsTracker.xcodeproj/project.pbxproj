@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		030670E22AFAB098007F82EF /* StoreGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030670E12AFAB098007F82EF /* StoreGame.swift */; };
 		036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D72622AE41D8B000E50C6 /* ShotsData.swift */; };
 		038BF2E62AC67D9F0047DDF3 /* RecordStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */; };
 		038BF2E92AC67DD00047DDF3 /* LoadPastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		030670E12AFAB098007F82EF /* StoreGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreGame.swift; sourceTree = "<group>"; };
 		036D72622AE41D8B000E50C6 /* ShotsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotsData.swift; sourceTree = "<group>"; };
 		038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordStatsView.swift; sourceTree = "<group>"; };
 		038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadPastView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			children = (
 				038BF2E72AC67DA30047DDF3 /* Views */,
 				036D72622AE41D8B000E50C6 /* ShotsData.swift */,
+				030670E12AFAB098007F82EF /* StoreGame.swift */,
 				03E507A52AC6794F00134DD0 /* GoalieStatsTrackerApp.swift */,
 				03E507A92AC6795000134DD0 /* Assets.xcassets */,
 				03E507AB2AC6795000134DD0 /* Preview Content */,
@@ -279,6 +282,7 @@
 				03E507A82AC6794F00134DD0 /* ContentView.swift in Sources */,
 				036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */,
 				03E507A62AC6794F00134DD0 /* GoalieStatsTrackerApp.swift in Sources */,
+				030670E22AFAB098007F82EF /* StoreGame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,6 +449,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -474,6 +479,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

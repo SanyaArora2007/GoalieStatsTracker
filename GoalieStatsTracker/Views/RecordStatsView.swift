@@ -174,7 +174,6 @@ struct RecordStatsView: View {
             }
             
             VStack {
-                
                 if shotsData.runningScore < 0 {
                     Text(String(format: "Running Score: %.1f", shotsData.runningScore))
                         .foregroundColor(Color.red)
