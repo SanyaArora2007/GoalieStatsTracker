@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecordStatsView: View {
         
+    @EnvironmentObject var gameStore: GameStore
     
     static let colorGoal = Color.red
     static let colorSave = Color.green
@@ -198,7 +199,30 @@ struct RecordStatsView: View {
                     .font(Font.headline)
                     .frame(alignment: .trailing)
             }
+            Button(action: {
+                Task {
+                    do {
+                        try await save()
+                    }
+                    catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }
+                }, 
+                   label: {Text("Save Game") }
+                )
+            }
         }
+    
+    func save() async throws {
+        do {
+            try await gameStore.save()
+            print("hi")
+        }
+        catch {
+            fatalError(error.localizedDescription)
+        }
+        
     }
 }
 

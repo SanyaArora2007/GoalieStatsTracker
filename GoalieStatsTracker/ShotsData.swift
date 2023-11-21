@@ -14,6 +14,7 @@ class ShotsData: ObservableObject, Codable {
     @Published var totalShots: Int = 0
     @Published var saves: Int = 0
     @Published var savePercentage: Int = 0
+    @Published var shots: [Shot] = []
     
     enum CodingKeys: CodingKey {
         case runningScore, totalShots, saves, savePercentage
@@ -35,6 +36,9 @@ class ShotsData: ObservableObject, Codable {
         totalShots = try container.decode(Int.self, forKey: .totalShots)
         saves = try container.decode(Int.self, forKey: .saves)
         savePercentage = try container.decode(Int.self, forKey: .savePercentage)
+    }
+    
+    required init() {
     }
     
     struct Shot: Codable {
@@ -137,9 +141,7 @@ class ShotsData: ObservableObject, Codable {
             }
         }
     }
-    
-    var shots: [Shot] = []
-    
+        
     func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) {
         let grid = whichGrid(coordinate: location)
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid)
