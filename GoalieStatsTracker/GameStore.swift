@@ -30,12 +30,12 @@ class GameStore: ObservableObject {
         self.storage = shots
     }
     
-    func save() async throws {
+    func save(game: ShotsData) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode(storage)
-            print(storage)
+            let data = try JSONEncoder().encode(game)
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
+            print(outfile)
         }
         _  = try await task.value
     }

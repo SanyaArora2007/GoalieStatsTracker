@@ -17,7 +17,7 @@ class ShotsData: ObservableObject, Codable {
     @Published var shots: [Shot] = []
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage
+        case runningScore, totalShots, saves, savePercentage, shots
     }
     
     func encode(to encoder: Encoder) throws {
@@ -27,6 +27,7 @@ class ShotsData: ObservableObject, Codable {
         try container.encode(totalShots, forKey: .totalShots)
         try container.encode(saves, forKey: .saves)
         try container.encode(savePercentage, forKey: .savePercentage)
+        try container.encode(shots, forKey: .shots)
     }
     
     required init(from decoder: Decoder) throws {
@@ -36,6 +37,7 @@ class ShotsData: ObservableObject, Codable {
         totalShots = try container.decode(Int.self, forKey: .totalShots)
         saves = try container.decode(Int.self, forKey: .saves)
         savePercentage = try container.decode(Int.self, forKey: .savePercentage)
+        shots = try container.decode(Array.self, forKey: .shots)
     }
     
     required init() {
@@ -45,6 +47,7 @@ class ShotsData: ObservableObject, Codable {
         var wasItAGoal: Bool
         var wasItEightMeter: Bool
         var gridItCameFrom: Int
+        var coordinate: CGPoint
         
         func calculateScore() -> Float {
             switch (gridItCameFrom) {
@@ -144,7 +147,7 @@ class ShotsData: ObservableObject, Codable {
         
     func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) {
         let grid = whichGrid(coordinate: location)
-        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid)
+        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
         totalShots += 1
         

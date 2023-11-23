@@ -10,10 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var gameStore: GameStore
     
-    @Environment(\.scenePhase) private var scenePhase
-    
-    @SceneStorage("TrackGoalieStats") private var saveGame: String?
-    
     var body: some View {
         NavigationView {
             VStack {
@@ -65,23 +61,11 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: scenePhase) { newScenePhase in
-            if newScenePhase == .background {
-                Task {
-                    do {
-                        try await gameStore.save()
-                    }
-                    catch {
-                        fatalError(error.localizedDescription)
-                    }
-                }
-            }
-        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(GameStore())
+        ContentView()
     }
 }
