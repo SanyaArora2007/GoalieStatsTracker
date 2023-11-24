@@ -217,7 +217,6 @@ struct RecordStatsView: View {
     func save() async throws {
         do {
             try await gameStore.save(game: shotsData)
-            print("hi")
         }
         catch {
             fatalError(error.localizedDescription)

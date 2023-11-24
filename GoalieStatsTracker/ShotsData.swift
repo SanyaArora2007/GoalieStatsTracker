@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class ShotsData: ObservableObject, Codable {
+class ShotsData: ObservableObject, Codable, Identifiable {
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0

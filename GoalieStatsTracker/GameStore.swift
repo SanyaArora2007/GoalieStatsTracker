@@ -17,22 +17,22 @@ class GameStore: ObservableObject {
             .appendingPathComponent("GoalieStatsTracker")
     }
     
-    func load() async throws {
+    func load() async throws -> [ShotsData] {
         let task = Task<[ShotsData], Error> {
             let fileURL = try Self.fileURL()
             guard let data = try? Data(contentsOf: fileURL) else {
-                return storage
+                return []
             }
-            let shotsData = try JSONDecoder().decode([ShotsData].self, from: data)
-            return shotsData
+            let games = try JSONDecoder().decode([ShotsData].self, from: data)
+            return games
         }
-        let shots = try await task.value
-        self.storage = shots
+        let games = try await task.value
+        return games
     }
     
     func save(game: ShotsData) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode(game)
+            let data = try JSONEncoder().encode([game])
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
             print(outfile)
