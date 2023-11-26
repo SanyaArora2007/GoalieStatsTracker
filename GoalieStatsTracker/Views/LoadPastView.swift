@@ -15,10 +15,10 @@ struct LoadPastView: View {
     
     var body: some View {
         NavigationStack {
-            List($games) { game in
+            List($games) { $game in
                 VStack(alignment: .leading) {
                     NavigationLink {
-                        RecordStatsView(gameStore: _gameStore)
+                        RecordStatsView(gameStore: _gameStore, shotsData: game)
                     } label: {
                         Text("Game 1")
                     }
