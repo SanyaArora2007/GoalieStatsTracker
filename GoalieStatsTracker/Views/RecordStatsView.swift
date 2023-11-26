@@ -154,7 +154,7 @@ struct RecordStatsView: View {
                         .resizable()
                         .frame(width: 400, height: 240)
                     
-                    ForEach(pointsOn12Meter, id: \.coordinate.x) { shot in
+                    ForEach(pointsOn12Meter, id: \.self) { shot in
                         ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter))
                     }
                 }

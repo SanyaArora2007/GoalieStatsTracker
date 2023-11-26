@@ -43,11 +43,19 @@ class ShotsData: ObservableObject, Codable, Identifiable {
     required init() {
     }
     
-    struct Shot: Codable {
+    struct Shot: Codable, Hashable {
         var wasItAGoal: Bool
         var wasItEightMeter: Bool
         var gridItCameFrom: Int
         var coordinate: CGPoint
+        
+        
+        // https://stackoverflow.com/questions/41972319/make-struct-hashable
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(coordinate.x)
+            hasher.combine(coordinate.y)
+        }
         
         func calculateScore() -> Float {
             switch (gridItCameFrom) {
