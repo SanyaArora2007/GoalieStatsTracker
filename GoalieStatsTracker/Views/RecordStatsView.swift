@@ -24,20 +24,18 @@ struct RecordStatsView: View {
     
     @State private var runningScoreColor: Color = Color.black
     
-    @State var pointsOn12Meter: [CGPoint] = []
+    @State var pointsOn12Meter: [ShotsData.Shot] = []
     
     @State var isGoal: Bool = false
     @State var is8Meter: Bool = false
-    
-    @State var currentColor: Color = colorNeutral
-    
+        
     @StateObject var shotsData = ShotsData()
     
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
-                pointsOn12Meter.append(event.location)
-                shotsData.newShot(goal:isGoal, eightMeter:is8Meter, location:event.location)
+                let shot = shotsData.newShot(goal:isGoal, eightMeter:is8Meter, location:event.location)
+                pointsOn12Meter.append(shot)
             }
     }
     
@@ -50,7 +48,6 @@ struct RecordStatsView: View {
                     color8MGoalButton = RecordStatsView.colorNeutral
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
-                    currentColor = colorGoalButton
                     isGoal = true
                     is8Meter = false
                 }
@@ -66,7 +63,6 @@ struct RecordStatsView: View {
                     color8MGoalButton = RecordStatsView.colorNeutral
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
-                    currentColor = colorSaveButton
                     isGoal = false
                     is8Meter = false
                 }
@@ -82,7 +78,6 @@ struct RecordStatsView: View {
                     color8MGoalButton = RecordStatsView.color8MGoal
                     color8MSaveButton = RecordStatsView.colorNeutral
                     
-                    currentColor = color8MGoalButton
                     isGoal = true
                     is8Meter = true
                 }
@@ -98,7 +93,6 @@ struct RecordStatsView: View {
                     color8MGoalButton = RecordStatsView.colorNeutral
                     color8MSaveButton = RecordStatsView.color8MSave
                     
-                    currentColor = color8MSaveButton
                     isGoal = false
                     is8Meter = true
                 }
@@ -160,8 +154,8 @@ struct RecordStatsView: View {
                         .resizable()
                         .frame(width: 400, height: 240)
                     
-                    ForEach(pointsOn12Meter, id: \.x) { point in
-                        ClickedCircle(currentLocation: point, circleColor: currentColor)
+                    ForEach(pointsOn12Meter, id: \.coordinate.x) { shot in
+                        ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter))
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)
@@ -222,6 +216,25 @@ struct RecordStatsView: View {
             fatalError(error.localizedDescription)
         }
         
+    }
+    
+    func circleColor(wasItAGoal: Bool, wasItA8Meter: Bool) -> Color {
+        if wasItAGoal == true {
+            if wasItA8Meter == true {
+                return RecordStatsView.color8MGoal
+            }
+            else {
+                return RecordStatsView.colorGoal
+            }
+        }
+        else {
+            if wasItA8Meter == true {
+                return RecordStatsView.color8MSave
+            }
+            else {
+                return RecordStatsView.colorSave
+            }
+        }
     }
 }
 

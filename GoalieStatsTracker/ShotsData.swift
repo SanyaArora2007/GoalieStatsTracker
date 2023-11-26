@@ -145,7 +145,7 @@ class ShotsData: ObservableObject, Codable, Identifiable {
         }
     }
         
-    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) {
+    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) -> Shot {
         let grid = whichGrid(coordinate: location)
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
@@ -160,6 +160,7 @@ class ShotsData: ObservableObject, Codable, Identifiable {
         savePercentage = Int((Float(saves) / Float(totalShots)) * 100)
 
         shots.append(shot)
+        return shot
     }
     
     func whichGrid(coordinate: CGPoint) -> Int {
