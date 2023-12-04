@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct RecordStatsView: View {
-        
+
+    @State private var showAlert = false
+    
     @EnvironmentObject var gameStore: GameStore
     
     static let colorGoal = Color.red
@@ -28,8 +30,11 @@ struct RecordStatsView: View {
 
     @State var isGoal: Bool = false
     @State var is8Meter: Bool = false
+    
+    @State var loadView: Bool = false
         
     @StateObject var shotsData = ShotsData()
+
     
     init() {
     }
@@ -115,9 +120,12 @@ struct RecordStatsView: View {
     var body: some View {
         VStack {
             VStack {
-                Text("Goalie Name")
-                    .font(Font.largeTitle)
-                    .foregroundColor(Color.indigo)
+                TextField("Playing Against?", text: $shotsData.gameName)
+                    .multilineTextAlignment(.center)
+                    .font(.title)
+                    .foregroundStyle(Color.black)
+                Spacer()
+                    .frame(height: 50)
                 HStack {
                     Spacer()
                     ZStack {
@@ -206,7 +214,12 @@ struct RecordStatsView: View {
                     .font(Font.headline)
                     .frame(alignment: .trailing)
             }
+            
+            Spacer()
+                .frame(height: 60)
+            
             Button(action: {
+                showAlert = true
                 Task {
                     do {
                         try await save()
@@ -216,7 +229,20 @@ struct RecordStatsView: View {
                     }
                 }
                 }, 
-                   label: {Text("Save Game") }
+                   label: {
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 130, height: 40)
+                            .foregroundColor(Color.gray)
+                            .opacity(0.5)
+                        Text("Save Game")
+                            .font(.title2)
+                            .foregroundStyle(Color.teal)
+                            .alert(isPresented: $showAlert) {
+                                Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"))
+                            }
+                    }
+                }
                 )
             }
         }
@@ -228,7 +254,6 @@ struct RecordStatsView: View {
         catch {
             fatalError(error.localizedDescription)
         }
-        
     }
     
     func circleColor(wasItAGoal: Bool, wasItA8Meter: Bool) -> Color {

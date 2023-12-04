@@ -20,7 +20,7 @@ struct LoadPastView: View {
                     NavigationLink {
                         RecordStatsView(gameStore: _gameStore, shotsData: game)
                     } label: {
-                        Text("Game 1")
+                        Text("\(game.gameName)\n\(Date.now.addingTimeInterval(600), style: .date)")
                     }
                 }
                 .navigationTitle("Games")

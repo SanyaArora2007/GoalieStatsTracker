@@ -15,9 +15,10 @@ class ShotsData: ObservableObject, Codable, Identifiable {
     @Published var saves: Int = 0
     @Published var savePercentage: Int = 0
     @Published var shots: [Shot] = []
+    @Published var gameName: String = ""
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots
+        case runningScore, totalShots, saves, savePercentage, shots, gameName
     }
     
     func encode(to encoder: Encoder) throws {
@@ -28,6 +29,7 @@ class ShotsData: ObservableObject, Codable, Identifiable {
         try container.encode(saves, forKey: .saves)
         try container.encode(savePercentage, forKey: .savePercentage)
         try container.encode(shots, forKey: .shots)
+        try container.encode(gameName, forKey: .gameName)
     }
     
     required init(from decoder: Decoder) throws {
@@ -38,6 +40,7 @@ class ShotsData: ObservableObject, Codable, Identifiable {
         saves = try container.decode(Int.self, forKey: .saves)
         savePercentage = try container.decode(Int.self, forKey: .savePercentage)
         shots = try container.decode(Array.self, forKey: .shots)
+        gameName = try container.decode(String.self, forKey: .gameName)
     }
     
     required init() {
