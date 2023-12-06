@@ -11,7 +11,11 @@ struct RecordStatsView: View {
 
     @State private var showAlert = false
     
+    var loadPastView: Bool = false
+    var disable: Bool = false
+    
     @EnvironmentObject var gameStore: GameStore
+    @Environment(\.presentationMode) var presentationMode
     
     static let colorGoal = Color.red
     static let colorSave = Color.green
@@ -47,6 +51,8 @@ struct RecordStatsView: View {
         _gameStore = gameStore
         _shotsData = StateObject(wrappedValue: shotsData)
         _pointsOn12Meter = State(initialValue: shotsData.shots)
+        loadPastView = true
+        disable = true
     }
     
     var draw12MeterCircle: some Gesture {
@@ -230,21 +236,29 @@ struct RecordStatsView: View {
                 }
                 }, 
                    label: {
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 130, height: 40)
-                            .foregroundColor(Color.gray)
-                            .opacity(0.5)
-                        Text("Save Game")
-                            .font(.title2)
-                            .foregroundStyle(Color.teal)
-                            .alert(isPresented: $showAlert) {
-                                Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"))
+                        if loadPastView == false {
+                            ZStack {
+                                Rectangle()
+                                    .frame(width: 130, height: 40)
+                                    .foregroundColor(Color.gray)
+                                    .opacity(0.5)
+                                Text("Save Game")
+                                    .font(.title2)
+                                    .foregroundStyle(Color.teal)
+                                    .alert(isPresented: $showAlert) {
+                                        Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
+                                            Text("Main Menu"), action: {
+                                                presentationMode.wrappedValue.dismiss()
+                                            }
+                                        )
+                                    )
+                                }
                             }
                     }
                 }
                 )
             }
+            .disabled(disable)
         }
     
     func save() async throws {

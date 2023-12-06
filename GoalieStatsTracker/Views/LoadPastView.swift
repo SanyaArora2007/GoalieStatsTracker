@@ -10,6 +10,7 @@ import SwiftUI
 struct LoadPastView: View {
     @EnvironmentObject var gameStore: GameStore
     @State private var games: [ShotsData] = []
+    @State var showAlert = true
     
     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-run-an-asynchronous-task-when-a-view-is-shown
     
@@ -21,6 +22,15 @@ struct LoadPastView: View {
                         RecordStatsView(gameStore: _gameStore, shotsData: game)
                     } label: {
                         Text("\(game.gameName)\n\(Date.now.addingTimeInterval(600), style: .date)")
+                            .swipeActions {
+                                Button("Delete") {
+                                    showAlert = true
+                                }
+                                .tint(Color.red)
+                                alert(isPresented: $showAlert) {
+                                    Alert(title: Text("Game deleted"))
+                                }
+                            }
                     }
                 }
                 .navigationTitle("Games")

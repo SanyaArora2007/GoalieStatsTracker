@@ -28,34 +28,33 @@ struct ContentView: View {
                 Spacer()
                     .frame(height: 80.0)
                 
-                HStack {
+                HStack(alignment: .center) {
                     NavigationLink {
                         RecordStatsView(gameStore: _gameStore)
                     } label: {
-                        Text("Record")
-                            .multilineTextAlignment(.leading)
+                        Text("New Game")
                             .foregroundStyle(.teal)
                             .font(.title)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.gray, lineWidth: 4)
-                                    .frame(width: 150, height: 60)
+                                    .frame(width: 160, height: 60)
                                 )
                     }
                     
                     Spacer()
+                        .frame(width: 60)
                     
                     NavigationLink {
                         LoadPastView()
                     } label: {
                         Text("Load Past")
-                            .multilineTextAlignment(.trailing)
                             .foregroundStyle(.teal)
                             .font(.title)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.gray, lineWidth: 4)
-                                    .frame(width: 150, height: 60)
+                                    .frame(width: 160, height: 60)
                                 )
                     }
                 }

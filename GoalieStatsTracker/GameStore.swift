@@ -23,8 +23,8 @@ class GameStore: ObservableObject {
             guard let data = try? Data(contentsOf: fileURL) else {
                 return []
             }
-            let games = try JSONDecoder().decode([ShotsData].self, from: data)
-            return games
+            storage = try JSONDecoder().decode([ShotsData].self, from: data)
+            return storage
         }
         let games = try await task.value
         return games
@@ -32,7 +32,8 @@ class GameStore: ObservableObject {
     
     func save(game: ShotsData) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode([game])
+            storage.insert(game, at: 0)
+            let data = try JSONEncoder().encode(storage)
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
             print(outfile)
