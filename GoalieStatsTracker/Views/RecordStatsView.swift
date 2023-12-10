@@ -224,42 +224,43 @@ struct RecordStatsView: View {
             Spacer()
                 .frame(height: 60)
             
-            Button(action: {
-                showAlert = true
-                Task {
-                    do {
-                        try await save()
+            Button(
+                action: {
+                    showAlert = true
+                    Task {
+                        do {
+                            try await save()
+                        }
+                        catch {
+                            fatalError(error.localizedDescription)
+                        }
                     }
-                    catch {
-                        fatalError(error.localizedDescription)
-                    }
-                }
-                }, 
-                   label: {
-                        if loadPastView == false {
-                            ZStack {
-                                Rectangle()
-                                    .frame(width: 130, height: 40)
-                                    .foregroundColor(Color.gray)
-                                    .opacity(0.5)
-                                Text("Save Game")
-                                    .font(.title2)
-                                    .foregroundStyle(Color.teal)
-                                    .alert(isPresented: $showAlert) {
-                                        Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
-                                            Text("Main Menu"), action: {
-                                                presentationMode.wrappedValue.dismiss()
-                                            }
-                                        )
+                },
+                label: {
+                    if loadPastView == false {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 130, height: 40)
+                                .foregroundColor(Color.gray)
+                                .opacity(0.5)
+                            Text("Save Game")
+                                .font(.title2)
+                                .foregroundStyle(Color.teal)
+                                .alert(isPresented: $showAlert) {
+                                    Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
+                                        Text("Main Menu"), action: {
+                                            presentationMode.wrappedValue.dismiss()
+                                        }
                                     )
-                                }
+                                )
                             }
+                        }
                     }
                 }
-                )
-            }
-            .disabled(disable)
+            )
         }
+        .disabled(disable)
+    }
     
     func save() async throws {
         do {
