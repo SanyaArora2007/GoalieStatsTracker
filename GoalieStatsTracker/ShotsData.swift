@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class ShotsData: ObservableObject, Codable, Identifiable {
+class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
@@ -16,6 +16,17 @@ class ShotsData: ObservableObject, Codable, Identifiable {
     @Published var savePercentage: Int = 0
     @Published var shots: [Shot] = []
     @Published var gameName: String = ""
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(gameName)
+        hasher.combine(runningScore)
+    }
+
+    static func == (lhs: ShotsData, rhs: ShotsData) -> Bool {
+        return
+            lhs.gameName == rhs.gameName &&
+            lhs.savePercentage == rhs.savePercentage
+    }
     
     enum CodingKeys: CodingKey {
         case runningScore, totalShots, saves, savePercentage, shots, gameName

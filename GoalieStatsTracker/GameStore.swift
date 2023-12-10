@@ -36,9 +36,18 @@ class GameStore: ObservableObject {
             let data = try JSONEncoder().encode(storage)
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
-            print(outfile)
         }
         _  = try await task.value
+    }
+    
+    func remove(offsets: IndexSet) async throws {
+        let task = Task {
+            storage.remove(atOffsets: offsets)
+            let data = try JSONEncoder().encode(storage)
+            let outfile = try GameStore.fileURL()
+            try data.write(to: outfile)
+        }
+        _ = try await task.value
     }
 }
 
