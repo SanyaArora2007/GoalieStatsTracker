@@ -124,142 +124,144 @@ struct RecordStatsView: View {
     }
     
     var body: some View {
-        VStack {
+        ScrollView(.vertical) {
             VStack {
-                TextField("Playing Against?", text: $shotsData.gameName)
-                    .multilineTextAlignment(.center)
-                    .font(.title)
-                    .foregroundStyle(Color.black)
-                Spacer()
-                    .frame(height: 50)
-                HStack {
+                VStack {
+                    TextField("Playing Against?", text: $shotsData.gameName)
+                        .multilineTextAlignment(.center)
+                        .font(.title)
+                        .foregroundStyle(Color.black)
                     Spacer()
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 80, height: 40)
-                            .foregroundColor(colorGoalButton)
-                            .opacity(0.5)
-                            .gesture(tapGoalGesture)
-                        Text("Goal")
-                            .font(.headline)
-                    }
-                    Spacer()
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 80, height: 40)
-                            .foregroundColor(colorSaveButton)
-                            .opacity(0.5)
-                            .gesture(tapSaveGesture)
-                        Text("Save")
-                            .font(.headline)
-                    }
-                    Spacer()
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 80, height: 40)
-                            .foregroundColor(color8MGoalButton)
-                            .opacity(0.5)
-                            .gesture(tapClearGesture)
-                        Text("8M Goal")
-                            .font(.headline)
-                    }
-                    Spacer()
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 80, height: 40)
-                            .foregroundColor(color8MSaveButton)
-                            .opacity(0.5)
-                            .gesture(tap8MeterGesture)
-                        Text("8M Save")
-                            .font(.headline)
-                    }
-                    Spacer()
-                }
-                
-                ZStack {
-                    Image("12MeterDiagram")
-                        .resizable()
-                        .frame(width: 400, height: 240)
-                    
-                    ForEach(pointsOn12Meter, id: \.self) { shot in
-                        ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter))
-                    }
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                .contentShape(Rectangle())
-                .gesture(draw12MeterCircle)
-                
-                Divider()
-                
-                Spacer()
-                    .frame(height: 40)
-            }
-            
-            VStack {
-                if shotsData.runningScore < 0 {
-                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                        .foregroundColor(Color.red)
-                        .font(Font.title)                }
-                else if shotsData.runningScore > 0 {
-                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                        .foregroundColor(Color.blue)
-                        .font(Font.title)                }
-                else if shotsData.runningScore == 0 {
-                    Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                        .foregroundColor(Color.black)
-                        .font(Font.title)
-                }
-                
-                Text("Saves: \(shotsData.saves)   (\(shotsData.savePercentage)%)")
-                    .foregroundColor(Color.black)
-                    .font(Font.headline)
-                    .frame(alignment: .trailing)
-                
-                Text("Total Shots: \(shotsData.totalShots)")
-                    .foregroundColor(Color.black)
-                    .font(Font.headline)
-                    .frame(alignment: .trailing)
-            }
-            
-            Spacer()
-                .frame(height: 60)
-            
-            Button(
-                action: {
-                    showAlert = true
-                    Task {
-                        do {
-                            try await save()
-                        }
-                        catch {
-                            fatalError(error.localizedDescription)
-                        }
-                    }
-                },
-                label: {
-                    if loadPastView == false {
+                        .frame(height: 50)
+                    HStack {
+                        Spacer()
                         ZStack {
                             Rectangle()
-                                .frame(width: 130, height: 40)
-                                .foregroundColor(Color.gray)
+                                .frame(width: 80, height: 40)
+                                .foregroundColor(colorGoalButton)
                                 .opacity(0.5)
-                            Text("Save Game")
-                                .font(.title2)
-                                .foregroundStyle(Color.teal)
-                                .alert(isPresented: $showAlert) {
-                                    Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
-                                        Text("Main Menu"), action: {
-                                            presentationMode.wrappedValue.dismiss()
-                                        }
-                                    )
-                                )
+                                .gesture(tapGoalGesture)
+                            Text("Goal")
+                                .font(.headline)
+                        }
+                        Spacer()
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 80, height: 40)
+                                .foregroundColor(colorSaveButton)
+                                .opacity(0.5)
+                                .gesture(tapSaveGesture)
+                            Text("Save")
+                                .font(.headline)
+                        }
+                        Spacer()
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 80, height: 40)
+                                .foregroundColor(color8MGoalButton)
+                                .opacity(0.5)
+                                .gesture(tapClearGesture)
+                            Text("8M Goal")
+                                .font(.headline)
+                        }
+                        Spacer()
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 80, height: 40)
+                                .foregroundColor(color8MSaveButton)
+                                .opacity(0.5)
+                                .gesture(tap8MeterGesture)
+                            Text("8M Save")
+                                .font(.headline)
+                        }
+                        Spacer()
+                    }
+                    
+                    ZStack {
+                        Image("12MeterDiagram")
+                            .resizable()
+                            .frame(width: 400, height: 240)
+                        
+                        ForEach(pointsOn12Meter, id: \.self) { shot in
+                            ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter))
+                        }
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .contentShape(Rectangle())
+                    .gesture(draw12MeterCircle)
+                    
+                    Divider()
+                    
+                    Spacer()
+                        .frame(height: 40)
+                }
+                
+                VStack {
+                    if shotsData.runningScore < 0 {
+                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                            .foregroundColor(Color.red)
+                        .font(Font.title)                }
+                    else if shotsData.runningScore > 0 {
+                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                            .foregroundColor(Color.blue)
+                        .font(Font.title)                }
+                    else if shotsData.runningScore == 0 {
+                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
+                            .foregroundColor(Color.black)
+                            .font(Font.title)
+                    }
+                    
+                    Text("Saves: \(shotsData.saves)   (\(shotsData.savePercentage)%)")
+                        .foregroundColor(Color.black)
+                        .font(Font.headline)
+                        .frame(alignment: .trailing)
+                    
+                    Text("Total Shots: \(shotsData.totalShots)")
+                        .foregroundColor(Color.black)
+                        .font(Font.headline)
+                        .frame(alignment: .trailing)
+                }
+                
+                Spacer()
+                    .frame(height: 60)
+                
+                Button(
+                    action: {
+                        showAlert = true
+                        Task {
+                            do {
+                                try await save()
+                            }
+                            catch {
+                                fatalError(error.localizedDescription)
+                            }
+                        }
+                    },
+                    label: {
+                        if loadPastView == false {
+                            ZStack {
+                                Rectangle()
+                                    .frame(width: 130, height: 40)
+                                    .foregroundColor(Color.gray)
+                                    .opacity(0.5)
+                                Text("Save Game")
+                                    .font(.title2)
+                                    .foregroundStyle(Color.teal)
+                                    .alert(isPresented: $showAlert) {
+                                        Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
+                                                Text("Main Menu"), action: {
+                                                    presentationMode.wrappedValue.dismiss()
+                                                }
+                                            )
+                                        )
+                                    }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
+            .disabled(disable)
         }
-        .disabled(disable)
     }
     
     func save() async throws {
