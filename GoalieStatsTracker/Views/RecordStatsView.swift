@@ -24,7 +24,7 @@ struct RecordStatsView: View {
     static let colorNeutral = Color.gray
     
     @State private var colorGoalButton : Color = colorNeutral
-    @State private var colorSaveButton : Color = colorNeutral
+    @State private var colorSaveButton : Color = colorSave
     @State private var color8MGoalButton : Color = colorNeutral
     @State private var color8MSaveButton : Color = colorNeutral
     
