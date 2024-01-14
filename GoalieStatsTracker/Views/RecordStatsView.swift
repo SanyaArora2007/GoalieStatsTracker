@@ -127,6 +127,8 @@ struct RecordStatsView: View {
         ScrollView(.vertical) {
             VStack {
                 VStack {
+                    Spacer()
+                        .frame(height: 75)
                     TextField("Playing Against?", text: $shotsData.gameName)
                         .multilineTextAlignment(.center)
                         .font(.title)
@@ -240,7 +242,7 @@ struct RecordStatsView: View {
                     label: {
                         if loadPastView == false {
                             ZStack {
-                                Text("Save Game")
+                                Text("Save")
                                     .foregroundStyle(.teal)
                                     .font(.title)
                                     .overlay(
@@ -262,6 +264,7 @@ struct RecordStatsView: View {
                 )
             }
             .disabled(disable)
+            .navigationBarBackButtonHidden(true)
         }
     }
     
