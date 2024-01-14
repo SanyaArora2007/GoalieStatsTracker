@@ -27,9 +27,13 @@ struct ContentView: View {
                     .frame(width: 350, height: 350)
                 
                 Spacer()
-                    .frame(height: 80.0)
+                    .frame(height: 80)
                 
                 HStack(alignment: .center) {
+                    
+                    Spacer()
+                        .frame(width: 35)
+                    
                     NavigationLink {
                         RecordStatsView(gameStore: _gameStore)
                     } label: {
@@ -42,9 +46,7 @@ struct ContentView: View {
                                     .frame(width: 160, height: 60)
                                 )
                     }
-                    
-                    Spacer()
-                        .frame(width: 60)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
                     NavigationLink {
                         LoadPastView()
@@ -58,6 +60,11 @@ struct ContentView: View {
                                     .frame(width: 160, height: 60)
                                 )
                     }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+
+                    Spacer()
+                        .frame(width: 40)
+                    
                 }
             }
         }

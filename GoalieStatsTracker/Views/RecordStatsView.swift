@@ -231,6 +231,10 @@ struct RecordStatsView: View {
 
                 if loadPastView == false {
                     HStack {
+                        
+                        Spacer()
+                            .frame(width: 80)
+                        
                         Button(
                             action: {
                                 showSaveAlert = true
@@ -264,9 +268,7 @@ struct RecordStatsView: View {
                                 }
                             }
                         )
-                        
-                        Spacer()
-                            .frame(width: 90)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button(
                             action: {
@@ -293,6 +295,11 @@ struct RecordStatsView: View {
                                     }
                             }
                         )
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        
+                        Spacer()
+                            .frame(width: 60)
+                        
                     }
                 }
             }
