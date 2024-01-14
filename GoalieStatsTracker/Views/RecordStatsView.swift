@@ -240,13 +240,14 @@ struct RecordStatsView: View {
                     label: {
                         if loadPastView == false {
                             ZStack {
-                                Rectangle()
-                                    .frame(width: 130, height: 40)
-                                    .foregroundColor(Color.gray)
-                                    .opacity(0.5)
                                 Text("Save Game")
-                                    .font(.title2)
-                                    .foregroundStyle(Color.teal)
+                                    .foregroundStyle(.teal)
+                                    .font(.title)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(Color.gray, lineWidth: 4)
+                                            .frame(width: 180, height: 55)
+                                        )
                                     .alert(isPresented: $showAlert) {
                                         Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
                                                 Text("Main Menu"), action: {
