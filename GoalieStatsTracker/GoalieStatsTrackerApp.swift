@@ -14,6 +14,7 @@ struct GoalieStatsTrackerApp: App {
     var body: some Scene {
         WindowGroup() {
             ContentView()
+                .environment(\.colorScheme, .light)
                 .environmentObject(store)
         }
     }
