@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+
     @EnvironmentObject var gameStore: GameStore
-    
+
     let buttonFontSize: CGFloat = 0.03
     let buttonBorderWidth: CGFloat = 0.004
     let buttonWidth: CGFloat = 0.35
@@ -31,18 +31,18 @@ struct ContentView: View {
 
                     Spacer()
                         .frame(height: proxy.size.height * verticalSpacerSize)
-                    
+
                     Image("MainMenuPicture")
                         .resizable()
                         .scaledToFit()
                         .frame(width: proxy.size.width * mainImageSize)
-                    
+
                     Spacer()
                         .frame(height: proxy.size.height * verticalSpacerSize)
-                    
+
                     HStack(alignment: .center) {
                         Spacer()
-                        
+
                         NavigationLink {
                             RecordStatsView(gameStore: _gameStore)
                         } label: {
@@ -55,9 +55,9 @@ struct ContentView: View {
                                         .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
                                 )
                         }
-                        
+
                         Spacer()
-                        
+
                         NavigationLink {
                             LoadPastView()
                         } label: {
@@ -70,9 +70,14 @@ struct ContentView: View {
                                         .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
                                 )
                         }
-                        
+
                         Spacer()
                     }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+
+                    Spacer()
+                        .frame(width: 40)
+
                 }
             }
             .navigationViewStyle(.stack)

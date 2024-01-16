@@ -228,22 +228,26 @@ struct RecordStatsView: View {
                 
                 Spacer()
                     .frame(height: 60)
-                
-                HStack {
-                    Button(
-                        action: {
-                            showSaveAlert = true
-                            Task {
-                                do {
-                                    try await save()
+
+                if loadPastView == false {
+                    HStack {
+                        
+                        Spacer()
+                            .frame(width: 80)
+                        
+                        Button(
+                            action: {
+                                showSaveAlert = true
+                                Task {
+                                    do {
+                                        try await save()
+                                    }
+                                    catch {
+                                        fatalError(error.localizedDescription)
+                                    }
                                 }
-                                catch {
-                                    fatalError(error.localizedDescription)
-                                }
-                            }
-                        },
-                        label: {
-                            if loadPastView == false {
+                            },
+                            label: {
                                 ZStack {
                                     Text("Save")
                                         .foregroundStyle(.teal)
@@ -263,35 +267,40 @@ struct RecordStatsView: View {
                                         }
                                 }
                             }
-                        }
-                    )
-                    
-                    Spacer()
-                        .frame(width: 90)
-                    
-                    Button(
-                        action: {
-                            showDiscardAlert = true
-                        },
-                        label: {
-                            Text("Discard")
-                                .foregroundStyle(.teal)
-                                .font(.title)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.gray, lineWidth: 4)
-                                        .frame(width: 150, height: 55)
-                                )
-                                .alert(isPresented: $showDiscardAlert) {
-                                    Alert(title: Text("Disacrd Game"), message: Text("Are you sure you want to discard this game?"), dismissButton: Alert.Button.default(
-                                        Text("Yes"), action: {
-                                            presentationMode.wrappedValue.dismiss()
-                                        }
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Button(
+                            action: {
+                                showDiscardAlert = true
+                            },
+                            label: {
+                                Text("Discard")
+                                    .foregroundStyle(.teal)
+                                    .font(.title)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(Color.gray, lineWidth: 4)
+                                            .frame(width: 150, height: 55)
                                     )
-                                    )
-                                }
-                        }
-                    )
+                                    .alert(isPresented: $showDiscardAlert) {
+                                        Alert(
+                                            title: Text("Disacrd Game"),
+                                            message: Text("Are you sure you want to discard this game?"),
+                                            primaryButton: Alert.Button.default(
+                                                Text("Yes"), action: { presentationMode.wrappedValue.dismiss() }
+                                            ),
+                                            secondaryButton: .cancel()
+                                        )
+                                    }
+                            }
+                        )
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        
+                        Spacer()
+                            .frame(width: 60)
+                        
+                    }
                 }
             }
             .disabled(disable)
