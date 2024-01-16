@@ -38,6 +38,9 @@ struct FieldView: View {
         .contentShape(Rectangle())
         .gesture(draw12MeterCircle)
 
+        Divider()
+
+        Spacer().frame(height: 40)
     }
     
     func circleColor(wasItAGoal: Bool, wasItA8Meter: Bool) -> Color {

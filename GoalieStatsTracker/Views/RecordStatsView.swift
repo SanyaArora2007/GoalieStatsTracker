@@ -42,32 +42,11 @@ struct RecordStatsView: View {
     var body: some View {
         ScrollView(.vertical) {
             VStack {
-                VStack {
-                    Spacer()
-                        .frame(height: 75)
-                    
-                    GameTitleView(parent: self)
-                
-                    Spacer()
-                        .frame(height: 50)
-                    
-                    ShotSelectorsView(parent: self)
-                      
-                    FieldView(parent: self)
-                    
-                    Divider()
-                    
-                    Spacer()
-                        .frame(height: 40)
-                }
-                
+                GameTitleView(parent: self)
+                ShotSelectorsView(parent: self)
+                FieldView(parent: self)
                 ScoringView(parent: self)
-                
-                Spacer()
-                    .frame(height: 60)
-                
                 GameButtonsView(parent: self)
-                
             }
             .disabled(disable)
             .navigationBarBackButtonHidden(true)

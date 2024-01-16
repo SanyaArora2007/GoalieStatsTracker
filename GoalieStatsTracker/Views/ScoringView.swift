@@ -43,5 +43,6 @@ struct ScoringView: View {
                 .frame(alignment: .trailing)
         }
 
+        Spacer().frame(height: 60)
     }
 }

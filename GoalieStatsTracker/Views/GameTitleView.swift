@@ -17,9 +17,15 @@ struct GameTitleView: View {
     }
     
     var body: some View {
+        Spacer()
+            .frame(height: 75)
+
         TextField("Playing Against?", text: _parent.$shotsData.gameName)
             .multilineTextAlignment(.center)
             .font(.title)
             .foregroundStyle(Color.black)
+
+        Spacer()
+            .frame(height: 50)
     }
 }
