@@ -74,10 +74,6 @@ struct ContentView: View {
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
-
-                    Spacer()
-                        .frame(width: 40)
-
                 }
             }
             .navigationViewStyle(.stack)
