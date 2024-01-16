@@ -45,10 +45,9 @@ struct RecordStatsView: View {
                 VStack {
                     Spacer()
                         .frame(height: 75)
-                    TextField("Playing Against?", text: $shotsData.gameName)
-                        .multilineTextAlignment(.center)
-                        .font(.title)
-                        .foregroundStyle(Color.black)
+                    
+                    GameTitleView(parent: self)
+                
                     Spacer()
                         .frame(height: 50)
                     
