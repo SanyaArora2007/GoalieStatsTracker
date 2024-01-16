@@ -12,6 +12,7 @@
 		034585F12B56407800528EC3 /* ShotSelectorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034585F02B56407800528EC3 /* ShotSelectorsView.swift */; };
 		034585F32B5641AC00528EC3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034585F22B5641AC00528EC3 /* Colors.swift */; };
 		034585F52B56FC0C00528EC3 /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034585F42B56FC0C00528EC3 /* FieldView.swift */; };
+		034585FB2B56FEFC00528EC3 /* ScoringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034585FA2B56FEFC00528EC3 /* ScoringView.swift */; };
 		036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D72622AE41D8B000E50C6 /* ShotsData.swift */; };
 		038BF2E62AC67D9F0047DDF3 /* RecordStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */; };
 		038BF2E92AC67DD00047DDF3 /* LoadPastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */; };
@@ -47,6 +48,7 @@
 		034585F02B56407800528EC3 /* ShotSelectorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotSelectorsView.swift; sourceTree = "<group>"; };
 		034585F22B5641AC00528EC3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		034585F42B56FC0C00528EC3 /* FieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldView.swift; sourceTree = "<group>"; };
+		034585FA2B56FEFC00528EC3 /* ScoringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringView.swift; sourceTree = "<group>"; };
 		036D72622AE41D8B000E50C6 /* ShotsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotsData.swift; sourceTree = "<group>"; };
 		038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordStatsView.swift; sourceTree = "<group>"; };
 		038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadPastView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				034585F02B56407800528EC3 /* ShotSelectorsView.swift */,
 				034585F22B5641AC00528EC3 /* Colors.swift */,
 				034585F42B56FC0C00528EC3 /* FieldView.swift */,
+				034585FA2B56FEFC00528EC3 /* ScoringView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				03E507A82AC6794F00134DD0 /* ContentView.swift in Sources */,
 				036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */,
 				03E507A62AC6794F00134DD0 /* GoalieStatsTrackerApp.swift in Sources */,
+				034585FB2B56FEFC00528EC3 /* ScoringView.swift in Sources */,
 				030670E42AFF0BC9007F82EF /* GameStore.swift in Sources */,
 				034585F12B56407800528EC3 /* ShotSelectorsView.swift in Sources */,
 				034585F52B56FC0C00528EC3 /* FieldView.swift in Sources */,

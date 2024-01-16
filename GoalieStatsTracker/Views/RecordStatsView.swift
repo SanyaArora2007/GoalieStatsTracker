@@ -69,31 +69,7 @@ struct RecordStatsView: View {
                         .frame(height: 40)
                 }
                 
-                VStack {
-                    if shotsData.runningScore < 0 {
-                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                            .foregroundColor(Color.red)
-                        .font(Font.title)                }
-                    else if shotsData.runningScore > 0 {
-                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                            .foregroundColor(Color.blue)
-                        .font(Font.title)                }
-                    else if shotsData.runningScore == 0 {
-                        Text(String(format: "Running Score: %.1f", shotsData.runningScore))
-                            .foregroundColor(Color.black)
-                            .font(Font.title)
-                    }
-                    
-                    Text("Saves: \(shotsData.saves)   (\(shotsData.savePercentage)%)")
-                        .foregroundColor(Color.black)
-                        .font(Font.headline)
-                        .frame(alignment: .trailing)
-                    
-                    Text("Total Shots: \(shotsData.totalShots)")
-                        .foregroundColor(Color.black)
-                        .font(Font.headline)
-                        .frame(alignment: .trailing)
-                }
+                ScoringView(parent: self)
                 
                 Spacer()
                     .frame(height: 60)
