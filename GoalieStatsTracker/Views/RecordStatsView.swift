@@ -337,19 +337,6 @@ struct RecordStatsView: View {
     }
 }
 
-struct ClickedCircle: View {
-    
-    @State var currentLocation: CGPoint
-    @State var circleColor: Color
-
-    var body: some View {
-
-        return Circle().fill(circleColor)
-            .frame(width: 10, height: 10)
-            .position(currentLocation)
-    }
-}
-
 struct RecordStatsView_Previews: PreviewProvider {
     static var previews: some View {
         RecordStatsView()

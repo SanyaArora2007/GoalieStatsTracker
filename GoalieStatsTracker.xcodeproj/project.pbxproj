@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		030670E42AFF0BC9007F82EF /* GameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030670E32AFF0BC9007F82EF /* GameStore.swift */; };
+		034585EF2B563FA200528EC3 /* ClickedCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034585EE2B563FA200528EC3 /* ClickedCircle.swift */; };
 		036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D72622AE41D8B000E50C6 /* ShotsData.swift */; };
 		038BF2E62AC67D9F0047DDF3 /* RecordStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */; };
 		038BF2E92AC67DD00047DDF3 /* LoadPastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		030670E32AFF0BC9007F82EF /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
+		034585EE2B563FA200528EC3 /* ClickedCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickedCircle.swift; sourceTree = "<group>"; };
 		036D72622AE41D8B000E50C6 /* ShotsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotsData.swift; sourceTree = "<group>"; };
 		038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordStatsView.swift; sourceTree = "<group>"; };
 		038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadPastView.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				03E507A72AC6794F00134DD0 /* ContentView.swift */,
 				038BF2E52AC67D9F0047DDF3 /* RecordStatsView.swift */,
 				038BF2E82AC67DD00047DDF3 /* LoadPastView.swift */,
+				034585EE2B563FA200528EC3 /* ClickedCircle.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				038BF2E92AC67DD00047DDF3 /* LoadPastView.swift in Sources */,
+				034585EF2B563FA200528EC3 /* ClickedCircle.swift in Sources */,
 				038BF2E62AC67D9F0047DDF3 /* RecordStatsView.swift in Sources */,
 				03E507A82AC6794F00134DD0 /* ContentView.swift in Sources */,
 				036D72632AE41D8B000E50C6 /* ShotsData.swift in Sources */,
