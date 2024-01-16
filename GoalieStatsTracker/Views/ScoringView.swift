@@ -11,9 +11,11 @@ import SwiftUI
 struct ScoringView: View {
     
     var _parent: RecordStatsView
-    
-    init(parent: RecordStatsView) {
+    let _geometry: GeometryProxy
+
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var body: some View {

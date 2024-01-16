@@ -40,16 +40,18 @@ struct RecordStatsView: View {
     }
     
     var body: some View {
-        ScrollView(.vertical) {
-            VStack {
-                GameTitleView(parent: self)
-                ShotSelectorsView(parent: self)
-                FieldView(parent: self)
-                ScoringView(parent: self)
-                GameButtonsView(parent: self)
+        GeometryReader { proxy in
+            ScrollView(.vertical) {
+                VStack {
+                    GameTitleView(parent: self, geometry: proxy)
+                    ShotSelectorsView(parent: self, geometry: proxy)
+                    FieldView(parent: self, geometry: proxy)
+                    ScoringView(parent: self, geometry: proxy)
+                    GameButtonsView(parent: self, geometry: proxy)
+                }
+                .disabled(disable)
+                .navigationBarBackButtonHidden(true)
             }
-            .disabled(disable)
-            .navigationBarBackButtonHidden(true)
         }
     }
 }

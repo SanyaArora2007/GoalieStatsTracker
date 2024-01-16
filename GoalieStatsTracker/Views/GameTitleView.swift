@@ -11,14 +11,16 @@ import SwiftUI
 struct GameTitleView: View {
 
     var _parent: RecordStatsView
-    
-    init(parent: RecordStatsView) {
+    let _geometry:GeometryProxy
+
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var body: some View {
         Spacer()
-            .frame(height: 75)
+            .frame(height: _geometry.size.height * 0.05)
 
         TextField("Playing Against?", text: _parent.$shotsData.gameName)
             .multilineTextAlignment(.center)
@@ -26,6 +28,6 @@ struct GameTitleView: View {
             .foregroundStyle(Color.black)
 
         Spacer()
-            .frame(height: 50)
+            .frame(height: _geometry.size.height * 0.05)
     }
 }

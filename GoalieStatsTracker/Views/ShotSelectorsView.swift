@@ -16,9 +16,11 @@ struct ShotSelectorsView: View {
     @State private var color8MSaveButton : Color = Colors.colorNeutral
     
     var _parent: RecordStatsView
+    let _geometry: GeometryProxy
     
-    init(parent: RecordStatsView) {
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var tapGoalGesture: some Gesture {
