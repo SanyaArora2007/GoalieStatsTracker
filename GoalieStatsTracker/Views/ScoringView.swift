@@ -34,19 +34,39 @@ struct ScoringView: View {
     
     var body: some View {
         VStack {
-            Text(String(format: "Running Score: %.1f", _parent.shotsData.runningScore))
-                .foregroundColor(scoreColor())
-                .font(.system(size: _geometry.size.height * scoreFontSize))
-
-            Text("Saves: \(_parent.shotsData.saves)   (\(_parent.shotsData.savePercentage)%)")
-                .foregroundColor(Color.black)
-                .font(.system(size: _geometry.size.height * shotsFontSize))
-                .frame(alignment: .trailing)
+            HStack {
+                Text("Running Score:")
+                    .foregroundColor(Color.black)
+                    .font(.system(size: _geometry.size.height * scoreFontSize, weight: .light))
+                Text(String(format: "%.1f", _parent.shotsData.runningScore))
+                    .foregroundColor(scoreColor())
+                    .font(.system(size: _geometry.size.height * scoreFontSize, weight: .bold))
+            }
             
-            Text("Total Shots: \(_parent.shotsData.totalShots)")
-                .foregroundColor(Color.black)
-                .font(.system(size: _geometry.size.height * shotsFontSize))
-                .frame(alignment: .trailing)
+            Spacer()
+                .frame(height: _geometry.size.height * 0.01)
+
+            HStack {
+                Text("Saves:")
+                    .foregroundColor(Color.black)
+                    .font(.system(size: _geometry.size.height * shotsFontSize, weight: .light))
+                    .frame(width: _geometry.size.width*0.5, alignment: .trailing)
+                Text("\(_parent.shotsData.saves)  (\(_parent.shotsData.savePercentage)%)")
+                    .foregroundColor(Color.black)
+                    .font(.system(size: _geometry.size.height * shotsFontSize, weight: .bold))
+                    .frame(width: _geometry.size.width*0.5, alignment: .leading)
+            }
+            
+            HStack {
+                Text("Shots:")
+                    .foregroundColor(Color.black)
+                    .font(.system(size: _geometry.size.height * shotsFontSize, weight: .light))
+                    .frame(width: _geometry.size.width*0.5, alignment: .trailing)
+                Text("\(_parent.shotsData.totalShots)")
+                    .foregroundColor(Color.black)
+                    .font(.system(size: _geometry.size.height * shotsFontSize, weight: .bold))
+                    .frame(width: _geometry.size.width*0.5, alignment: .leading)
+            }
         }
 
         Spacer().frame(height: 60)
