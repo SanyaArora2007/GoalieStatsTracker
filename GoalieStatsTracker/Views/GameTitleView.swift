@@ -24,7 +24,7 @@ struct GameTitleView: View {
 
         TextField("Playing Against?", text: _parent.$shotsData.gameName)
             .multilineTextAlignment(.center)
-            .font(.title)
+            .font(.system(size: _geometry.size.height * 0.03))
             .foregroundStyle(Color.black)
 
         Spacer()

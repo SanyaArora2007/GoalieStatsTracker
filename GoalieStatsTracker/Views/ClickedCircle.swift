@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ClickedCircle: View {
-    
-    @State var currentLocation: CGPoint
-    @State var circleColor: Color
+    var _currentLocation: CGPoint
+    var _circleColor: Color
+    let _geometry: GeometryProxy
+
+    init(currentLocation: CGPoint, circleColor: Color, geometry: GeometryProxy) {
+        _currentLocation = currentLocation
+        _circleColor = circleColor
+        _geometry = geometry
+    }
 
     var body: some View {
 
-        return Circle().fill(circleColor)
-            .frame(width: 10, height: 10)
-            .position(currentLocation)
+        return Circle().fill(_circleColor)
+            .frame(width: _geometry.size.width*0.02, height: _geometry.size.width*0.02)
+            .position(_currentLocation)
     }
 }

@@ -25,11 +25,7 @@ struct GameButtonsView: View {
     
     var body: some View {
         if _parent.loadPastView == false {
-            HStack {
-                
-                Spacer()
-                    .frame(width: 80)
-                
+            HStack(alignment: .center) {
                 Button(
                     action: {
                         showSaveAlert = true
@@ -46,11 +42,11 @@ struct GameButtonsView: View {
                         ZStack {
                             Text("Save")
                                 .foregroundStyle(.teal)
-                                .font(.title)
+                                .font(.system(size: _geometry.size.height * 0.03))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.gray, lineWidth: 4)
-                                        .frame(width: 150, height: 55)
+                                    RoundedRectangle(cornerRadius: _geometry.size.width * 0.02)
+                                        .stroke(Color.gray, lineWidth: _geometry.size.height * 0.004)
+                                        .frame(width: _geometry.size.width * 0.30, height: _geometry.size.height * 0.06)
                                 )
                                 .alert(isPresented: $showSaveAlert) {
                                     Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
@@ -63,7 +59,9 @@ struct GameButtonsView: View {
                         }
                     }
                 )
-                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                    .frame(width: _geometry.size.width * 0.3)
                 
                 Button(
                     action: {
@@ -72,11 +70,11 @@ struct GameButtonsView: View {
                     label: {
                         Text("Discard")
                             .foregroundStyle(.teal)
-                            .font(.title)
+                            .font(.system(size: _geometry.size.height * 0.03))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.gray, lineWidth: 4)
-                                    .frame(width: 150, height: 55)
+                                RoundedRectangle(cornerRadius: _geometry.size.width * 0.02)
+                                    .stroke(Color.gray, lineWidth: _geometry.size.height * 0.004)
+                                    .frame(width: _geometry.size.width * 0.30, height: _geometry.size.height * 0.06)
                             )
                             .alert(isPresented: $showDiscardAlert) {
                                 Alert(
@@ -90,11 +88,6 @@ struct GameButtonsView: View {
                             }
                     }
                 )
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                
-                Spacer()
-                    .frame(width: 60)
-                
             }
         }
 
