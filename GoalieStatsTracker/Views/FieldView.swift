@@ -11,9 +11,11 @@ import SwiftUI
 struct FieldView: View {
     
     var _parent: RecordStatsView
-    
-    init(parent: RecordStatsView) {
+    let _geometry: GeometryProxy
+
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var draw12MeterCircle: some Gesture {
@@ -28,16 +30,18 @@ struct FieldView: View {
         ZStack {
             Image("12MeterDiagram")
                 .resizable()
-                .frame(width: 400, height: 240)
-            
+                .scaledToFit()
             ForEach(_parent.pointsOn12Meter, id: \.self) { shot in
-                ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter))
+                ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
         .contentShape(Rectangle())
         .gesture(draw12MeterCircle)
 
+        Divider()
+
+        Spacer().frame(height: _geometry.size.height * 0.05)
     }
     
     func circleColor(wasItAGoal: Bool, wasItA8Meter: Bool) -> Color {

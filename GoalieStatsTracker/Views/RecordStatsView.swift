@@ -40,37 +40,18 @@ struct RecordStatsView: View {
     }
     
     var body: some View {
-        ScrollView(.vertical) {
-            VStack {
+        GeometryReader { proxy in
+            ScrollView(.vertical) {
                 VStack {
-                    Spacer()
-                        .frame(height: 75)
-                    
-                    GameTitleView(parent: self)
-                
-                    Spacer()
-                        .frame(height: 50)
-                    
-                    ShotSelectorsView(parent: self)
-                      
-                    FieldView(parent: self)
-                    
-                    Divider()
-                    
-                    Spacer()
-                        .frame(height: 40)
+                    GameTitleView(parent: self, geometry: proxy)
+                    ShotSelectorsView(parent: self, geometry: proxy)
+                    FieldView(parent: self, geometry: proxy)
+                    ScoringView(parent: self, geometry: proxy)
+                    GameButtonsView(parent: self, geometry: proxy)
                 }
-                
-                ScoringView(parent: self)
-                
-                Spacer()
-                    .frame(height: 60)
-                
-                GameButtonsView(parent: self)
-                
+                .disabled(disable)
+                .navigationBarBackButtonHidden(true)
             }
-            .disabled(disable)
-            .navigationBarBackButtonHidden(true)
         }
     }
 }

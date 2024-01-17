@@ -16,18 +16,23 @@ struct GameButtonsView: View {
     @State private var showDiscardAlert = false
         
     var _parent: RecordStatsView
+    let _geometry: GeometryProxy
     
-    init(parent: RecordStatsView) {
+    let buttonFontSize: CGFloat = 0.03
+    let buttonWidth: CGFloat = 0.3
+    let buttonHeight: CGFloat = 0.06
+    let buttonRadius: CGFloat = 0.02
+    let buttonBorderWidth: CGFloat = 0.004
+    let buttonSpacerWidth: CGFloat = 0.3
+
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var body: some View {
         if _parent.loadPastView == false {
-            HStack {
-                
-                Spacer()
-                    .frame(width: 80)
-                
+            HStack(alignment: .center) {
                 Button(
                     action: {
                         showSaveAlert = true
@@ -44,11 +49,11 @@ struct GameButtonsView: View {
                         ZStack {
                             Text("Save")
                                 .foregroundStyle(.teal)
-                                .font(.title)
+                                .font(.system(size: _geometry.size.height * buttonFontSize))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.gray, lineWidth: 4)
-                                        .frame(width: 150, height: 55)
+                                    RoundedRectangle(cornerRadius: _geometry.size.width * buttonRadius)
+                                        .stroke(Color.gray, lineWidth: _geometry.size.height * buttonBorderWidth)
+                                        .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                                 )
                                 .alert(isPresented: $showSaveAlert) {
                                     Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
@@ -61,7 +66,9 @@ struct GameButtonsView: View {
                         }
                     }
                 )
-                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                    .frame(width: _geometry.size.width * buttonSpacerWidth)
                 
                 Button(
                     action: {
@@ -70,11 +77,11 @@ struct GameButtonsView: View {
                     label: {
                         Text("Discard")
                             .foregroundStyle(.teal)
-                            .font(.title)
+                            .font(.system(size: _geometry.size.height * buttonFontSize))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.gray, lineWidth: 4)
-                                    .frame(width: 150, height: 55)
+                                RoundedRectangle(cornerRadius: _geometry.size.width * buttonRadius)
+                                    .stroke(Color.gray, lineWidth: _geometry.size.height * buttonBorderWidth)
+                                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                             )
                             .alert(isPresented: $showDiscardAlert) {
                                 Alert(
@@ -88,11 +95,6 @@ struct GameButtonsView: View {
                             }
                     }
                 )
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                
-                Spacer()
-                    .frame(width: 60)
-                
             }
         }
 

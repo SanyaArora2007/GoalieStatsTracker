@@ -16,9 +16,15 @@ struct ShotSelectorsView: View {
     @State private var color8MSaveButton : Color = Colors.colorNeutral
     
     var _parent: RecordStatsView
+    let _geometry: GeometryProxy
     
-    init(parent: RecordStatsView) {
+    let buttonWidth: CGFloat = 0.20
+    let buttonHeight: CGFloat = 0.05
+    let textSize: CGFloat = 0.02
+    
+    init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
+        _geometry = geometry
     }
     
     var tapGoalGesture: some Gesture {
@@ -86,42 +92,42 @@ struct ShotSelectorsView: View {
             Spacer()
             ZStack {
                 Rectangle()
-                    .frame(width: 80, height: 40)
+                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .foregroundColor(colorGoalButton)
                     .opacity(0.5)
                     .gesture(tapGoalGesture)
                 Text("Goal")
-                    .font(.headline)
+                    .font(.system(size: _geometry.size.height * textSize))
             }
             Spacer()
             ZStack {
                 Rectangle()
-                    .frame(width: 80, height: 40)
+                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .foregroundColor(colorSaveButton)
                     .opacity(0.5)
                     .gesture(tapSaveGesture)
                 Text("Save")
-                    .font(.headline)
+                    .font(.system(size: _geometry.size.height * textSize))
             }
             Spacer()
             ZStack {
                 Rectangle()
-                    .frame(width: 80, height: 40)
+                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .foregroundColor(color8MGoalButton)
                     .opacity(0.5)
                     .gesture(tapClearGesture)
                 Text("8M Goal")
-                    .font(.headline)
+                    .font(.system(size: _geometry.size.height * textSize))
             }
             Spacer()
             ZStack {
                 Rectangle()
-                    .frame(width: 80, height: 40)
+                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .foregroundColor(color8MSaveButton)
                     .opacity(0.5)
                     .gesture(tap8MeterGesture)
                 Text("8M Save")
-                    .font(.headline)
+                    .font(.system(size: _geometry.size.height * textSize))
             }
             Spacer()
         }
