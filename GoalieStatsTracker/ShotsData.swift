@@ -16,31 +16,35 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     @Published var savePercentage: Int = 0
     @Published var shots: [Shot] = []
     @Published var gameName: String = ""
+    @Published var gameTime: TimeInterval
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(gameName)
-        hasher.combine(runningScore)
+        hasher.combine(gameTime)
     }
 
     static func == (lhs: ShotsData, rhs: ShotsData) -> Bool {
         return
             lhs.gameName == rhs.gameName &&
-            lhs.savePercentage == rhs.savePercentage
+            lhs.gameTime == rhs.gameTime
     }
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots, gameName
+        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+        if gameName.trimmingCharacters(in: .whitespaces).count == 0 {
+            gameName = "My Game"
+        }
         try container.encode(runningScore, forKey: .runningScore)
         try container.encode(totalShots, forKey: .totalShots)
         try container.encode(saves, forKey: .saves)
         try container.encode(savePercentage, forKey: .savePercentage)
         try container.encode(shots, forKey: .shots)
         try container.encode(gameName, forKey: .gameName)
+        try container.encode(gameTime, forKey: .gameTime)
     }
     
     required init(from decoder: Decoder) throws {
@@ -52,9 +56,11 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         savePercentage = try container.decode(Int.self, forKey: .savePercentage)
         shots = try container.decode(Array.self, forKey: .shots)
         gameName = try container.decode(String.self, forKey: .gameName)
+        gameTime = try container.decode(TimeInterval.self, forKey: .gameTime)
     }
     
     required init() {
+        gameTime = NSDate().timeIntervalSince1970
     }
     
     struct Shot: Codable, Hashable {
