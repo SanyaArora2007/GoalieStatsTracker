@@ -10,10 +10,10 @@ import Foundation
 
 struct ShotSelectorsView: View {
     
-    @State private var colorGoalButton : Color = Colors.colorNeutral
-    @State private var colorSaveButton : Color = Colors.colorSave
-    @State private var color8MGoalButton : Color = Colors.colorNeutral
-    @State private var color8MSaveButton : Color = Colors.colorNeutral
+    @State private var colorGoalButton : Color
+    @State private var colorSaveButton : Color
+    @State private var color8MGoalButton : Color
+    @State private var color8MSaveButton : Color
     
     var _parent: RecordStatsView
     let _geometry: GeometryProxy
@@ -25,6 +25,20 @@ struct ShotSelectorsView: View {
     init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
         _geometry = geometry
+        
+        
+        if _parent.loadPastView == false {
+            _colorGoalButton = State(initialValue: Colors.colorNeutral)
+            _colorSaveButton = State(initialValue: Colors.colorSave)
+            _color8MGoalButton = State(initialValue: Colors.colorNeutral)
+            _color8MSaveButton = State(initialValue: Colors.colorNeutral)
+        }
+        else {
+            _colorGoalButton = State(initialValue: Colors.colorGoal)
+            _colorSaveButton = State(initialValue: Colors.colorSave)
+            _color8MGoalButton = State(initialValue: Colors.color8MGoal)
+            _color8MSaveButton = State(initialValue: Colors.color8MSave)
+        }
     }
     
     var tapGoalGesture: some Gesture {
