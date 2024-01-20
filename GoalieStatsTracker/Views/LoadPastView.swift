@@ -11,36 +11,54 @@ struct LoadPastView: View {
     @EnvironmentObject var gameStore: GameStore
     
     @State private var games: [ShotsData] = []
-            
+    
+    private var dateFormat: DateFormatter = DateFormatter()
+    
+    init() {
+        self.dateFormat.dateStyle = .long
+        self.dateFormat.timeStyle = .short
+    }
+    
     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-run-an-asynchronous-task-when-a-view-is-shown
     
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(games, id: \.self) { game in
-                    VStack(alignment: .leading) {
-                        NavigationLink {
-                            RecordStatsView(gameStore: _gameStore, shotsData: game)
-                        } label: {
-                            Text("\(game.gameName)\n\(Date.now.addingTimeInterval(600), style: .date)")
+        GeometryReader { proxy in
+            NavigationStack {
+                List {
+                    ForEach(games, id: \.self) { game in
+                        VStack(alignment: .leading) {
+                            NavigationLink {
+                                RecordStatsView(gameStore: _gameStore, shotsData: game)
+                            } label: {
+                                VStack {
+                                    Text(game.gameName)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
+                                    Spacer()
+                                        .frame(height: proxy.size.height * 0.0075)
+                                    Text(dateFormat.string(from: Date(timeIntervalSince1970:game.gameTime)))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: proxy.size.height * 0.015, weight: .light))
+                                }
+                            }
+                        }
+                    }
+                    .onDelete { indexes in
+                        Task {
+                            await deleteGame(offsets: indexes)
                         }
                     }
                 }
-                .onDelete { indexes in
-                    Task {
-                        await deleteGame(offsets: indexes)
-                    }
+                .navigationTitle("Games")
+                
+            }
+            .task {
+                do {
+                    try await games = gameStore.load()
                 }
-            }
-            .navigationTitle("Games")
-
-        }
-        .task {
-            do {
-                try await games = gameStore.load()
-            }
-            catch {
-                fatalError(error.localizedDescription)
+                catch {
+                    fatalError(error.localizedDescription)
+                }
             }
         }
     }
