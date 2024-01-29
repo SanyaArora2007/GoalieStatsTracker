@@ -10,6 +10,9 @@ import SwiftUI
 
 class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
+    var _imageWidth: CGFloat = 0
+    var _imageHeight: CGFloat = 0
+    
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
     @Published var saves: Int = 0
@@ -61,6 +64,11 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     required init() {
         gameTime = NSDate().timeIntervalSince1970
+    }
+    
+    func setImageSize(imageWidth: CGFloat, imageHeight: CGFloat) {
+        _imageWidth = imageWidth
+        _imageHeight = imageWidth
     }
     
     struct Shot: Codable, Hashable {
@@ -175,6 +183,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         
     func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) -> Shot {
         let grid = whichGrid(coordinate: location)
+        print(grid)
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
         totalShots += 1
@@ -193,16 +202,16 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     func whichGrid(coordinate: CGPoint) -> Int {
         var grid = 0
-        if coordinate.x <= 133 {
-            if coordinate.y <= 120 {
+        if coordinate.x <= ( _imageWidth * 0.33 ) {
+            if coordinate.y <= ( _imageHeight * 0.25 ) {
                 grid = 1
             }
             else {
                 grid = 4
             }
         }
-        else if coordinate.x > 133 && coordinate.x < 266 {
-            if coordinate.y <= 120 {
+        else if coordinate.x > ( _imageWidth * 0.33 ) && coordinate.x < ( _imageWidth * 0.66 ) {
+            if coordinate.y <= ( _imageHeight * 0.25 ) {
                 grid = 2
             }
             else {
@@ -210,7 +219,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             }
         }
         else {
-            if coordinate.y <= 120 {
+            if coordinate.y <= ( _imageHeight * 0.25 ) {
                 grid = 3
             }
             else {
