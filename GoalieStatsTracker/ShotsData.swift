@@ -16,7 +16,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     var halfYCoordinate: CGFloat = 0
     
     let image12meterMark: CGFloat = 300.0
-    let imageFarthestMark: CGFloat = 50.0
+    let imageFarthestMark: CGFloat = 35.0
     let imageGoalMark: CGFloat = 650.0
     
     @Published var runningScore: Float = 0
