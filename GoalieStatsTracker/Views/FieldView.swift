@@ -13,12 +13,10 @@ struct FieldView: View {
     var _parent: RecordStatsView
     
     let _geometry: GeometryProxy
-    let _imageHeight: CGFloat
 
     init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
         _geometry = geometry
-        _imageHeight = _geometry.size.height * 0.45
         _parent.shotsData.setFieldSize(width: _geometry.size.width)
     }
     
@@ -40,7 +38,7 @@ struct FieldView: View {
             Image("12MeterDiagram")
                 .resizable()
                 .scaledToFit()
-                .frame(height: _imageHeight)
+                .frame(maxWidth: .infinity, alignment: .bottomLeading)
             ForEach(_parent.pointsOn12Meter, id: \.self) { shot in
                 ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
@@ -50,8 +48,6 @@ struct FieldView: View {
         .gesture(draw12MeterCircle)
 
         Divider()
-
-        Spacer().frame(height: _geometry.size.height * 0.05)
     }
     
     func circleColor(wasItAGoal: Bool, wasItA8Meter: Bool) -> Color {
