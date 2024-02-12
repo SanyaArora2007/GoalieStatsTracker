@@ -19,17 +19,15 @@ struct FieldView: View {
         _parent = parent
         _geometry = geometry
         _imageHeight = _geometry.size.height * 0.45
-        _parent.shotsData.setImageSize(imageWidth: _geometry.size.width, imageHeight: _imageHeight)
-        print(_imageHeight)
+        _parent.shotsData.setFieldSize(width: _geometry.size.width)
     }
     
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
-                if event.location.y > 0 && event.location.y < _imageHeight * 0.78 {
-                    let shot = _parent.shotsData.newShot(goal:_parent.isGoal, eightMeter:_parent.is8Meter, location:event.location)
-                    _parent.pointsOn12Meter.append(shot)
-                    print("location \(event.location)")
+                let shot = _parent.shotsData.newShot(goal:_parent.isGoal, eightMeter:_parent.is8Meter, location:event.location)
+                if shot != nil {
+                    _parent.pointsOn12Meter.append(shot!)
                 }
             }
     }

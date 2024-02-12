@@ -10,8 +10,14 @@ import SwiftUI
 
 class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
-    var _imageWidth: CGFloat = 0
-    var _imageHeight: CGFloat = 0
+    var fieldWidth: CGFloat = 0
+    var minYCoordinate: CGFloat = 0
+    var maxYCoordinate: CGFloat = 0
+    var halfYCoordinate: CGFloat = 0
+    
+    let image12meterMark: CGFloat = 300.0
+    let imageFarthestMark: CGFloat = 50.0
+    let imageGoalMark: CGFloat = 650.0
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
@@ -66,9 +72,12 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         gameTime = NSDate().timeIntervalSince1970
     }
     
-    func setImageSize(imageWidth: CGFloat, imageHeight: CGFloat) {
-        _imageWidth = imageWidth
-        _imageHeight = imageWidth
+    func setFieldSize(width: CGFloat) {
+        self.fieldWidth = width
+        let ratio = width / 1178.0
+        self.minYCoordinate = imageFarthestMark * ratio
+        self.maxYCoordinate = imageGoalMark * ratio
+        self.halfYCoordinate = image12meterMark * ratio
     }
     
     struct Shot: Codable, Hashable {
@@ -181,9 +190,11 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         }
     }
         
-    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) -> Shot {
+    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) -> Shot? {
+        if location.y > maxYCoordinate || location.y < minYCoordinate {
+            return nil
+        }
         let grid = whichGrid(coordinate: location)
-        print(grid)
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
         totalShots += 1
@@ -202,16 +213,16 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     func whichGrid(coordinate: CGPoint) -> Int {
         var grid = 0
-        if coordinate.x <= ( _imageWidth * 0.33 ) {
-            if coordinate.y <= ( _imageHeight * 0.25 ) {
+        if coordinate.x <= ( fieldWidth * 0.33 ) {
+            if coordinate.y <= halfYCoordinate {
                 grid = 1
             }
             else {
                 grid = 4
             }
         }
-        else if coordinate.x > ( _imageWidth * 0.33 ) && coordinate.x < ( _imageWidth * 0.66 ) {
-            if coordinate.y <= ( _imageHeight * 0.25 ) {
+        else if coordinate.x > ( fieldWidth * 0.33 ) && coordinate.x < ( fieldWidth * 0.66 ) {
+            if coordinate.y <= halfYCoordinate {
                 grid = 2
             }
             else {
@@ -219,7 +230,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             }
         }
         else {
-            if coordinate.y <= ( _imageHeight * 0.25 ) {
+            if coordinate.y <= halfYCoordinate {
                 grid = 3
             }
             else {
