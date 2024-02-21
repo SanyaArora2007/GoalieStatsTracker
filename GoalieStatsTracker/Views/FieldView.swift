@@ -26,6 +26,14 @@ struct FieldView: View {
                 let shot = _parent.shotsData.newShot(goal:_parent.isGoal, eightMeter:_parent.is8Meter, location:event.location)
                 if shot != nil {
                     _parent.pointsOn12Meter.append(shot!)
+                    Task {
+                        do {
+                            try await _parent.gameStore.saveOngoingGame(game: _parent.shotsData)
+                        }
+                        catch {
+                            fatalError(error.localizedDescription)
+                        }
+                    }
                 }
             }
     }

@@ -73,6 +73,14 @@ struct GameButtonsView: View {
                 Button(
                     action: {
                         showDiscardAlert = true
+                        Task {
+                            do {
+                                try await discard()
+                            }
+                            catch {
+                                fatalError(error.localizedDescription)
+                            }
+                        }
                     },
                     label: {
                         Text("Discard")
@@ -109,4 +117,12 @@ struct GameButtonsView: View {
         }
     }
     
+    func discard() async throws {
+        do {
+            try await _parent.gameStore.discardOngoingGame()
+        }
+        catch {
+            fatalError(error.localizedDescription)
+        }
+    }
 }

@@ -17,6 +17,11 @@ class GameStore: ObservableObject {
             .appendingPathComponent("GoalieStatsTracker")
     }
     
+    private static func ongoingGameFileURL() throws -> URL {
+        try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            .appendingPathComponent("GoalieStatsTrackerOngoingGame")
+    }
+
     func load() async throws -> [ShotsData] {
         let task = Task<[ShotsData], Error> {
             let fileURL = try Self.fileURL()
@@ -32,12 +37,31 @@ class GameStore: ObservableObject {
     
     func save(game: ShotsData) async throws {
         let task = Task {
+            try await discardOngoingGame()
             storage.insert(game, at: 0)
             let data = try JSONEncoder().encode(storage)
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
         }
         _  = try await task.value
+    }
+    
+    func saveOngoingGame(game: ShotsData) async throws {
+        let task = Task {
+            let data = try JSONEncoder().encode(game)
+            let outfile = try GameStore.ongoingGameFileURL()
+            try data.write(to: outfile)
+        }
+        _  = try await task.value
+    }
+    
+    func discardOngoingGame()  async throws {
+        let task = Task {
+            do {
+                try FileManager.default.removeItem(at: GameStore.ongoingGameFileURL())
+            } catch {}
+        }
+        _  = await task.value
     }
     
     func remove(offsets: IndexSet) async throws {
