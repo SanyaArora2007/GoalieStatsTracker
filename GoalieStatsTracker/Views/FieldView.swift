@@ -31,7 +31,7 @@ struct FieldView: View {
                             try await _parent.gameStore.saveOngoingGame(game: _parent.shotsData)
                         }
                         catch {
-                            fatalError(error.localizedDescription)
+                            // don't report any errors because it will cause the app to crash in the middle of the game
                         }
                     }
                 }

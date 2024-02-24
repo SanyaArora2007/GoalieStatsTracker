@@ -74,12 +74,7 @@ struct GameButtonsView: View {
                     action: {
                         showDiscardAlert = true
                         Task {
-                            do {
-                                try await discard()
-                            }
-                            catch {
-                                fatalError(error.localizedDescription)
-                            }
+                            await discard()
                         }
                     },
                     label: {
@@ -117,12 +112,12 @@ struct GameButtonsView: View {
         }
     }
     
-    func discard() async throws {
+    func discard() async {
         do {
             try await _parent.gameStore.discardOngoingGame()
         }
         catch {
-            fatalError(error.localizedDescription)
+            // no need to report any errors when discarding a game
         }
     }
 }

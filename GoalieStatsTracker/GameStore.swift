@@ -53,8 +53,8 @@ class GameStore: ObservableObject {
             try data.write(to: outfile)
         }
         _  = try await task.value
-    }
-    
+    }				
+
     func discardOngoingGame()  async throws {
         let task = Task {
             do {
@@ -63,7 +63,7 @@ class GameStore: ObservableObject {
         }
         _  = await task.value
     }
-    
+
     func remove(offsets: IndexSet) async throws {
         let task = Task {
             storage.remove(atOffsets: offsets)
