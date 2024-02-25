@@ -34,10 +34,13 @@ class GameStore: ObservableObject {
         let games = try await task.value
         return games
     }
-    
+
     func save(game: ShotsData) async throws {
         let task = Task {
             try await discardOngoingGame()
+            if game.gameName.trimmingCharacters(in: .whitespaces).count == 0 {
+                game.gameName = "My Game"
+            }
             storage.insert(game, at: 0)
             let data = try JSONEncoder().encode(storage)
             let outfile = try GameStore.fileURL()

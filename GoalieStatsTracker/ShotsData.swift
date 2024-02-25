@@ -44,9 +44,6 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if gameName.trimmingCharacters(in: .whitespaces).count == 0 {
-            gameName = "My Game"
-        }
         try container.encode(runningScore, forKey: .runningScore)
         try container.encode(totalShots, forKey: .totalShots)
         try container.encode(saves, forKey: .saves)
