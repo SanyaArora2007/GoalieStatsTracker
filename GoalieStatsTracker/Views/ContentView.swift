@@ -77,6 +77,12 @@ struct ContentView: View {
                 }
             }
             .navigationViewStyle(.stack)
+            .task {
+                do {
+                    let _ = try await gameStore.load()
+                }
+                catch {}
+            }
         }
     }
 }
