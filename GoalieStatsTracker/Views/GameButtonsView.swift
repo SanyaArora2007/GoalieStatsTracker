@@ -56,11 +56,15 @@ struct GameButtonsView: View {
                                         .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                                 )
                                 .alert(isPresented: $showSaveAlert) {
-                                    Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
-                                        Text("Main Menu"), action: {
-                                            presentationMode.wrappedValue.dismiss()
-                                        }
-                                    )
+                                    Alert(
+                                        title: Text("Game had been saved!"),
+                                        message: Text("Go to Load Past to view your stats"),
+                                        dismissButton: Alert.Button.default(
+                                            Text("Main Menu"),
+                                            action: {
+                                                presentationMode.wrappedValue.dismiss()
+                                            }
+                                        )
                                     )
                                 }
                         }
@@ -73,6 +77,9 @@ struct GameButtonsView: View {
                 Button(
                     action: {
                         showDiscardAlert = true
+                        Task {
+                            await discard()
+                        }
                     },
                     label: {
                         Text("Discard")
@@ -109,4 +116,12 @@ struct GameButtonsView: View {
         }
     }
     
+    func discard() async {
+        do {
+            try await _parent.gameStore.discardOngoingGame()
+        }
+        catch {
+            // no need to report any errors when discarding a game
+        }
+    }
 }

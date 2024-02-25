@@ -14,7 +14,7 @@ struct ContentView: View {
     let buttonFontSize: CGFloat = 0.03
     let buttonBorderWidth: CGFloat = 0.004
     let buttonWidth: CGFloat = 0.35
-    let buttonHeight: CGFloat = 0.075
+    let buttonHeight: CGFloat = 0.09
     let buttonRadiusSize: CGFloat = 0.02
     let titleSize: CGFloat = 0.05
     let mainImageSize: CGFloat = 0.70
@@ -46,7 +46,7 @@ struct ContentView: View {
                         NavigationLink {
                             RecordStatsView(gameStore: _gameStore)
                         } label: {
-                            Text("New Game")
+                            Text(gameStore.ongoingGame == nil ? "New\nGame" : "Resume\nGame")
                                 .foregroundStyle(.teal)
                                 .font(.system(size: proxy.size.height * buttonFontSize))
                                 .overlay(
@@ -61,7 +61,7 @@ struct ContentView: View {
                         NavigationLink {
                             LoadPastView()
                         } label: {
-                            Text("Load Past")
+                            Text("Load Past\nGames")
                                 .foregroundStyle(.teal)
                                 .font(.system(size: proxy.size.height * buttonFontSize))
                                 .overlay(
@@ -77,6 +77,12 @@ struct ContentView: View {
                 }
             }
             .navigationViewStyle(.stack)
+            .task {
+                do {
+                    let _ = try await gameStore.load()
+                }
+                catch {}
+            }
         }
     }
 }

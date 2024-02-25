@@ -21,19 +21,23 @@ struct RecordStatsView: View {
     @State var isGoal: Bool = false
     @State var is8Meter: Bool = false
             
-    @StateObject var shotsData = ShotsData()
+    @State var shotsData = ShotsData()
 
-    
     init() {
     }
 
     init(gameStore: EnvironmentObject<GameStore>) {
         _gameStore = gameStore
+        let ongoingGame = self.gameStore.ongoingGame
+        if ongoingGame != nil {
+            self._shotsData = State(initialValue: ongoingGame!)
+            self._pointsOn12Meter = State(initialValue: ongoingGame!.shots)
+        }
     }
     
     init(gameStore: EnvironmentObject<GameStore>, shotsData: ShotsData) {
         _gameStore = gameStore
-        _shotsData = StateObject(wrappedValue: shotsData)
+        _shotsData = State(initialValue: shotsData)
         _pointsOn12Meter = State(initialValue: shotsData.shots)
         loadPastView = true
         disable = true
