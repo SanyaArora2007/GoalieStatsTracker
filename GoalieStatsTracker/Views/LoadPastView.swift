@@ -28,7 +28,7 @@ struct LoadPastView: View {
                     ForEach(games, id: \.self) { game in
                         VStack(alignment: .leading) {
                             NavigationLink {
-                                RecordStatsView(gameStore: _gameStore, shotsData: game)
+                                RecordStatsView(gameStore: _gameStore, shotsData: game, loadPast: true)
                             } label: {
                                 VStack {
                                     Text(game.gameName)

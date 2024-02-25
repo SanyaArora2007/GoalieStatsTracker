@@ -31,12 +31,12 @@ struct RecordStatsView: View {
         _gameStore = gameStore
     }
     
-    init(gameStore: EnvironmentObject<GameStore>, shotsData: ShotsData) {
+    init(gameStore: EnvironmentObject<GameStore>, shotsData: ShotsData, loadPast: Bool) {
         _gameStore = gameStore
         _shotsData = StateObject(wrappedValue: shotsData)
         _pointsOn12Meter = State(initialValue: shotsData.shots)
-        loadPastView = true
-        disable = true
+        loadPastView = loadPast
+        disable = loadPast
     }
     
     var body: some View {
