@@ -56,11 +56,15 @@ struct GameButtonsView: View {
                                         .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                                 )
                                 .alert(isPresented: $showSaveAlert) {
-                                    Alert(title: Text("Game had been saved!"), message: Text("Go to Load Past to view your stats"), dismissButton: Alert.Button.default(
-                                        Text("Main Menu"), action: {
-                                            presentationMode.wrappedValue.dismiss()
-                                        }
-                                    )
+                                    Alert(
+                                        title: Text("Game had been saved!"),
+                                        message: Text("Go to Load Past to view your stats"),
+                                        dismissButton: Alert.Button.default(
+                                            Text("Main Menu"),
+                                            action: {
+                                                presentationMode.wrappedValue.dismiss()
+                                            }
+                                        )
                                     )
                                 }
                         }
