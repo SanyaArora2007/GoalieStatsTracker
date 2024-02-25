@@ -11,6 +11,7 @@ import SwiftUI
 @MainActor
 class GameStore: ObservableObject {
     @Published var storage: [ShotsData] = []
+    @Published var ongoingGame: ShotsData? = nil
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -29,6 +30,7 @@ class GameStore: ObservableObject {
                 return []
             }
             storage = try JSONDecoder().decode([ShotsData].self, from: data)
+            self.loadOngoingGame()
             return storage
         }
         let games = try await task.value
@@ -48,7 +50,7 @@ class GameStore: ObservableObject {
         }
         _  = try await task.value
     }
-    
+
     func saveOngoingGame(game: ShotsData) async throws {
         let task = Task {
             let data = try JSONEncoder().encode(game)
@@ -56,12 +58,24 @@ class GameStore: ObservableObject {
             try data.write(to: outfile)
         }
         _  = try await task.value
-    }				
+    }
+
+    func loadOngoingGame() {
+        do {
+            let fileURL = try Self.ongoingGameFileURL()
+            guard let data = try? Data(contentsOf: fileURL) else {
+                return
+            }
+            ongoingGame = try JSONDecoder().decode(ShotsData.self, from: data)
+        }
+        catch {}
+    }
 
     func discardOngoingGame()  async throws {
         let task = Task {
             do {
                 try FileManager.default.removeItem(at: GameStore.ongoingGameFileURL())
+                ongoingGame = nil
             } catch {}
         }
         _  = await task.value
