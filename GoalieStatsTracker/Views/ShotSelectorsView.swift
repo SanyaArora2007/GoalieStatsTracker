@@ -39,7 +39,7 @@ struct ShotSelectorsView: View {
             _color8MSaveButton = State(initialValue: Colors.colorNeutral)
             
             _fontGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
-            _fontSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _fontSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .bold))
             _font8MGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
             _font8MSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
         }
@@ -67,6 +67,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = true
                     _parent.is8Meter = false
                 }
+                fontGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .bold)
+                fontSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
             }
     }
     
@@ -82,6 +86,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = false
                     _parent.is8Meter = false
                 }
+                fontGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                fontSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .bold)
+                font8MGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
             }
     }
     
@@ -97,6 +105,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = true
                     _parent.is8Meter = true
                 }
+                fontGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                fontSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .bold)
+                font8MSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
             }
     }
     
@@ -112,6 +124,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = false
                     _parent.is8Meter = true
                 }
+                fontGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                fontSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MGoalButton = Font.system(size: _geometry.size.height * textSize, weight: .regular)
+                font8MSaveButton = Font.system(size: _geometry.size.height * textSize, weight: .bold)
             }
     }
     
