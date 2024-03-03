@@ -15,10 +15,15 @@ struct ShotSelectorsView: View {
     @State private var color8MGoalButton : Color
     @State private var color8MSaveButton : Color
     
+    @State private var fontGoalButton: Font
+    @State private var fontSaveButton: Font
+    @State private var font8MGoalButton: Font
+    @State private var font8MSaveButton: Font
+    
     var _parent: RecordStatsView
     let _geometry: GeometryProxy
     
-    let buttonWidth: CGFloat = 0.20
+    let buttonWidth: CGFloat = 0.05
     let buttonHeight: CGFloat = 0.05
     let textSize: CGFloat = 0.02
     
@@ -32,13 +37,22 @@ struct ShotSelectorsView: View {
             _colorSaveButton = State(initialValue: Colors.colorSave)
             _color8MGoalButton = State(initialValue: Colors.colorNeutral)
             _color8MSaveButton = State(initialValue: Colors.colorNeutral)
+            
+            _fontGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _fontSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _font8MGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _font8MSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
         }
         else {
             _colorGoalButton = State(initialValue: Colors.colorGoal)
             _colorSaveButton = State(initialValue: Colors.colorSave)
             _color8MGoalButton = State(initialValue: Colors.color8MGoal)
             _color8MSaveButton = State(initialValue: Colors.color8MSave)
-        }
+            
+            _fontGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _fontSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _font8MGoalButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))
+            _font8MSaveButton = State(initialValue: .system(size: _geometry.size.height * textSize, weight: .regular))        }
     }
     
     var tapGoalGesture: some Gesture {
@@ -71,7 +85,7 @@ struct ShotSelectorsView: View {
             }
     }
     
-    var tapClearGesture: some Gesture {
+    var tap8MeterGoalGesture: some Gesture {
         TapGesture()
             .onEnded() {
                 withAnimation {
@@ -86,7 +100,7 @@ struct ShotSelectorsView: View {
             }
     }
     
-    var tap8MeterGesture: some Gesture {
+    var tap8MeterSaveGesture: some Gesture {
         TapGesture()
             .onEnded() {
                 withAnimation {
@@ -104,44 +118,52 @@ struct ShotSelectorsView: View {
     var body: some View {
         HStack {
             Spacer()
-            ZStack {
-                Rectangle()
+            HStack {
+                Circle()
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .background(Circle().fill(colorGoalButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .foregroundColor(colorGoalButton)
                     .opacity(0.5)
                     .gesture(tapGoalGesture)
                 Text("Goal")
-                    .font(.system(size: _geometry.size.height * textSize))
+                    .font(fontGoalButton)
+                    .gesture(tapGoalGesture)
             }
             Spacer()
-            ZStack {
-                Rectangle()
+            HStack {
+                Circle()
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .background(Circle().fill(colorSaveButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .foregroundColor(colorSaveButton)
                     .opacity(0.5)
                     .gesture(tapSaveGesture)
                 Text("Save")
-                    .font(.system(size: _geometry.size.height * textSize))
+                    .font(fontSaveButton)
+                    .gesture(tapSaveGesture)
             }
             Spacer()
-            ZStack {
-                Rectangle()
+            HStack {
+                Circle()
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .background(Circle().fill(color8MGoalButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .foregroundColor(color8MGoalButton)
                     .opacity(0.5)
-                    .gesture(tapClearGesture)
+                    .gesture(tap8MeterGoalGesture)
                 Text("8M Goal")
-                    .font(.system(size: _geometry.size.height * textSize))
+                    .font(font8MGoalButton)
+                    .gesture(tap8MeterGoalGesture)
             }
             Spacer()
-            ZStack {
-                Rectangle()
+            HStack {
+                Circle()
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .background(Circle().fill(color8MSaveButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .foregroundColor(color8MSaveButton)
                     .opacity(0.5)
-                    .gesture(tap8MeterGesture)
+                    .gesture(tap8MeterSaveGesture)
                 Text("8M Save")
-                    .font(.system(size: _geometry.size.height * textSize))
+                    .font(font8MSaveButton)
+                    .gesture(tap8MeterSaveGesture)
             }
             Spacer()
         }
