@@ -10,15 +10,15 @@ import Foundation
 
 struct ShotSelectorsView: View {
     
-    @State private var colorGoalButton : Color
-    @State private var colorSaveButton : Color
-    @State private var color8MGoalButton : Color
-    @State private var color8MSaveButton : Color
+    @State private var colorGoalButton : Color = Colors.colorNeutral
+    @State private var colorSaveButton : Color = Colors.colorNeutral
+    @State private var color8MGoalButton : Color = Colors.colorNeutral
+    @State private var color8MSaveButton : Color = Colors.colorNeutral
     
-    @State private var fontGoalButton: Font
-    @State private var fontSaveButton: Font
-    @State private var font8MGoalButton: Font
-    @State private var font8MSaveButton: Font
+    @State private var fontGoalButton: Font.Weight = Font.Weight.regular
+    @State private var fontSaveButton: Font.Weight = Font.Weight.regular
+    @State private var font8MGoalButton: Font.Weight = Font.Weight.regular
+    @State private var font8MSaveButton: Font.Weight = Font.Weight.regular
     
     var _parent: RecordStatsView
     let _geometry: GeometryProxy
@@ -33,27 +33,17 @@ struct ShotSelectorsView: View {
         _geometry = geometry
         
         
-        if _parent.loadPastView == false {
-            _colorGoalButton = State(initialValue: Colors.colorNeutral)
-            _colorSaveButton = State(initialValue: Colors.colorSave)
-            _color8MGoalButton = State(initialValue: Colors.colorNeutral)
-            _color8MSaveButton = State(initialValue: Colors.colorNeutral)
-            
-            _fontGoalButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-            _fontSaveButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .bold))
-            _font8MGoalButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-            _font8MSaveButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-        }
-        else {
+        if _parent.loadPastView == true {
             _colorGoalButton = State(initialValue: Colors.colorGoal)
             _colorSaveButton = State(initialValue: Colors.colorSave)
             _color8MGoalButton = State(initialValue: Colors.color8MGoal)
             _color8MSaveButton = State(initialValue: Colors.color8MSave)
+        }
+        else {
+            _colorSaveButton = State(initialValue: Colors.colorSave)
             
-            _fontGoalButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-            _fontSaveButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-            _font8MGoalButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))
-            _font8MSaveButton = State(initialValue: .system(size: _geometry.size.width * textSize, weight: .regular))        }
+            _fontSaveButton = State(initialValue: Font.Weight.bold)
+        }
     }
     
     var tapGoalGesture: some Gesture {
@@ -68,10 +58,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = true
                     _parent.is8Meter = false
                 }
-                fontGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .bold)
-                fontSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
+                fontGoalButton = Font.Weight.bold
+                fontSaveButton = Font.Weight.regular
+                font8MGoalButton = Font.Weight.regular
+                font8MSaveButton = Font.Weight.regular
             }
     }
     
@@ -87,10 +77,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = false
                     _parent.is8Meter = false
                 }
-                fontGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                fontSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .bold)
-                font8MGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
+                fontGoalButton = Font.Weight.regular
+                fontSaveButton = Font.Weight.bold
+                font8MGoalButton = Font.Weight.regular
+                font8MSaveButton = Font.Weight.regular
             }
     }
     
@@ -106,10 +96,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = true
                     _parent.is8Meter = true
                 }
-                fontGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                fontSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .bold)
-                font8MSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
+                fontGoalButton = Font.Weight.regular
+                fontSaveButton = Font.Weight.regular
+                font8MGoalButton = Font.Weight.bold
+                font8MSaveButton = Font.Weight.regular
             }
     }
     
@@ -125,10 +115,10 @@ struct ShotSelectorsView: View {
                     _parent.isGoal = false
                     _parent.is8Meter = true
                 }
-                fontGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                fontSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MGoalButton = Font.system(size: _geometry.size.width * textSize, weight: .regular)
-                font8MSaveButton = Font.system(size: _geometry.size.width * textSize, weight: .bold)
+                fontGoalButton = Font.Weight.regular
+                fontSaveButton = Font.Weight.regular
+                font8MGoalButton = Font.Weight.regular
+                font8MSaveButton = Font.Weight.bold
             }
     }
     
@@ -143,7 +133,8 @@ struct ShotSelectorsView: View {
                     .opacity(0.5)
                     .gesture(tapGoalGesture)
                 Text("Goal")
-                    .font(fontGoalButton)
+                    .font(.system(size: _geometry.size.width * textSize))
+                    .fontWeight(fontGoalButton)
                     .gesture(tapGoalGesture)
                     .frame(width: _geometry.size.width * 0.12, alignment: .leading)
             }
@@ -156,7 +147,8 @@ struct ShotSelectorsView: View {
                     .opacity(0.5)
                     .gesture(tapSaveGesture)
                 Text("Save")
-                    .font(fontSaveButton)
+                    .font(.system(size: _geometry.size.width * textSize))
+                    .fontWeight(fontSaveButton)
                     .gesture(tapSaveGesture)
                     .frame(width: _geometry.size.width * 0.12, alignment: .leading)
             }
@@ -169,7 +161,8 @@ struct ShotSelectorsView: View {
                     .opacity(0.5)
                     .gesture(tap8MeterGoalGesture)
                 Text("8M Goal")
-                    .font(font8MGoalButton)
+                    .font(.system(size: _geometry.size.width * textSize))
+                    .fontWeight(font8MGoalButton)
                     .gesture(tap8MeterGoalGesture)
                     .frame(width: _geometry.size.width * 0.17, alignment: .leading)
             }
@@ -182,7 +175,8 @@ struct ShotSelectorsView: View {
                     .opacity(0.5)
                     .gesture(tap8MeterSaveGesture)
                 Text("8M Save")
-                    .font(font8MSaveButton)
+                    .font(.system(size: _geometry.size.width * textSize))
+                    .fontWeight(font8MSaveButton)
                     .gesture(tap8MeterSaveGesture)
                     .frame(width: _geometry.size.width * 0.17, alignment: .leading)
             }
