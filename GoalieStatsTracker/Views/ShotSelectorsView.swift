@@ -26,6 +26,7 @@ struct ShotSelectorsView: View {
     let buttonWidth: CGFloat = 0.05
     let buttonHeight: CGFloat = 0.05
     let textSize: CGFloat = 0.04
+    let strokeWidth: CGFloat = 0.005
     
     init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
@@ -136,7 +137,7 @@ struct ShotSelectorsView: View {
             Spacer()
             HStack {
                 Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
                     .background(Circle().fill(colorGoalButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .opacity(0.5)
@@ -149,7 +150,7 @@ struct ShotSelectorsView: View {
             Spacer()
             HStack {
                 Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
                     .background(Circle().fill(colorSaveButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .opacity(0.5)
@@ -162,7 +163,7 @@ struct ShotSelectorsView: View {
             Spacer()
             HStack {
                 Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
                     .background(Circle().fill(color8MGoalButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .opacity(0.5)
@@ -175,7 +176,7 @@ struct ShotSelectorsView: View {
             Spacer()
             HStack {
                 Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * 0.005)
+                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
                     .background(Circle().fill(color8MSaveButton))
                     .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                     .opacity(0.5)
