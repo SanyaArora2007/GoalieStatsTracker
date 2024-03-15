@@ -35,7 +35,7 @@ struct ScoringView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Running Score:")
+                Text(_parent.loadPastView ? "Score:" : "Running Score:")
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * scoreFontSize, weight: .light))
                 Text(String(format: "%.1f", _parent.shotsData.runningScore))

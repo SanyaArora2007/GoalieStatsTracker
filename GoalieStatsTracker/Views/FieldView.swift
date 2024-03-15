@@ -76,7 +76,7 @@ struct FieldView: View {
                     }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                .padding(.trailing, 15)
+                .padding(.trailing, _geometry.size.width * 0.04)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
