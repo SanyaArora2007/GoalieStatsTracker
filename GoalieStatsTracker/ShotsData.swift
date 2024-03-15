@@ -208,6 +208,26 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         return shot
     }
     
+    func removeLastShot() {
+        if shots.isEmpty == true {
+            return
+        }
+        if shots.last!.wasItAGoal == false {
+            saves -= 1
+        }
+        totalShots -= 1
+        runningScore -= shots.last!.calculateScore()
+        
+        if totalShots == 0 {
+            savePercentage = 0
+        }
+        else {
+            savePercentage = Int((Float(saves) / Float(totalShots)) * 100)
+        }
+        shots.removeLast()
+    }
+        
+    
     func whichGrid(coordinate: CGPoint) -> Int {
         var grid = 0
         if coordinate.x <= ( fieldWidth * 0.33 ) {
