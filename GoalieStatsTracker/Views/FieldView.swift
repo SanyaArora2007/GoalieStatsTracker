@@ -50,6 +50,34 @@ struct FieldView: View {
             ForEach(_parent.pointsOn12Meter, id: \.self) { shot in
                 ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
+            if _parent.loadPastView == false {
+                Button(
+                    action: {
+                        _parent.shotsData.removeLastShot()
+                        if !_parent.pointsOn12Meter.isEmpty {
+                            _parent.pointsOn12Meter.removeLast()
+                        }
+                        Task {
+                            do {
+                                try await _parent.gameStore.saveOngoingGame(game: _parent.shotsData)
+                            }
+                            catch {
+                                // don't report any errors because it will cause the app to crash in the middle of the game
+                            }
+                        }
+                    },
+                    label: {
+                        Image(systemName: "arrow.uturn.backward.circle.fill")
+                            .resizable()
+                            .foregroundColor(Color.teal)
+                            .scaledToFit()
+                            .frame(width: _geometry.size.width * 0.08)
+                            .opacity(0.75)
+                    }
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                .padding(.trailing, _geometry.size.width * 0.04)
+            }
         }
         .fixedSize(horizontal: false, vertical: true)
         .contentShape(Rectangle())
