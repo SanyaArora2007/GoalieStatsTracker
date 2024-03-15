@@ -50,6 +50,21 @@ struct FieldView: View {
             ForEach(_parent.pointsOn12Meter, id: \.self) { shot in
                 ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
+            Button(
+                action: {
+                    
+                },
+                label: {
+                    Image(systemName: "arrow.uturn.backward.circle.fill")
+                        .resizable()
+                        .foregroundColor(Color.teal)
+                        .scaledToFit()
+                        .frame(width: _geometry.size.width * 0.08)
+                        .opacity(0.75)
+                }
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            .padding(.trailing, 15)
         }
         .fixedSize(horizontal: false, vertical: true)
         .contentShape(Rectangle())
