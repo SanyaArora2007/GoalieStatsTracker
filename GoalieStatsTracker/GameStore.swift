@@ -25,12 +25,12 @@ class GameStore: ObservableObject {
 
     func load() async throws -> [ShotsData] {
         let task = Task<[ShotsData], Error> {
+            self.loadOngoingGame()
             let fileURL = try Self.fileURL()
             guard let data = try? Data(contentsOf: fileURL) else {
                 return []
             }
             storage = try JSONDecoder().decode([ShotsData].self, from: data)
-            self.loadOngoingGame()
             return storage
         }
         let games = try await task.value
