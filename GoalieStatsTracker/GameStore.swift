@@ -60,6 +60,21 @@ class GameStore: ObservableObject {
         _  = try await task.value
     }
 
+    func update(game: ShotsData) async throws {
+        let task = Task {
+            for var existingGame in storage {
+                if existingGame.gameTime == game.gameTime {
+                    existingGame = game
+                }
+            }
+            
+            let data = try JSONEncoder().encode(storage)
+            let outfile = try GameStore.fileURL()
+            try data.write(to: outfile)
+        }
+        _  = try await task.value
+    }
+    
     func loadOngoingGame() {
         do {
             let fileURL = try Self.ongoingGameFileURL()

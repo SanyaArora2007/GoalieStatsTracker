@@ -28,10 +28,20 @@ struct GameTitleView: View {
 
         if _parent.loadPastView == true {
             VStack {
-                Text(_parent.shotsData.gameName)
+                TextField("", text: _parent.$shotsData.gameName)
                     .multilineTextAlignment(.center)
                     .font(.system(size: _geometry.size.height * 0.03))
                     .foregroundStyle(Color.black)
+                    .onChange(of: _parent.shotsData.gameName) { newValue in
+                        Task {
+                            do {
+                                try await update()
+                            }
+                            catch {
+                                fatalError(error.localizedDescription)
+                            }
+                        }
+                    }
 
                 Spacer()
                     .frame(height: _geometry.size.height * 0.01)
@@ -53,4 +63,14 @@ struct GameTitleView: View {
         Spacer()
             .frame(height: _geometry.size.height * 0.05)
     }
+    
+    func update() async throws {
+        do {
+            try await _parent.gameStore.update(game: _parent.shotsData)
+        }
+        catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    
 }
