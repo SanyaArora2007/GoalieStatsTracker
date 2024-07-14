@@ -48,12 +48,14 @@ struct RecordStatsView: View {
             ScrollView(.vertical) {
                 VStack {
                     GameTitleView(parent: self, geometry: proxy)
-                    ShotSelectorsView(parent: self, geometry: proxy)
-                    FieldView(parent: self, geometry: proxy)
-                    ScoringView(parent: self, geometry: proxy)
-                    GameButtonsView(parent: self, geometry: proxy)
+                    VStack {
+                        ShotSelectorsView(parent: self, geometry: proxy)
+                        FieldView(parent: self, geometry: proxy)
+                        ScoringView(parent: self, geometry: proxy)
+                        GameButtonsView(parent: self, geometry: proxy)
+                    }
+                    .disabled(disable)
                 }
-                .disabled(disable)
                 .navigationBarBackButtonHidden(true)
             }
         }
