@@ -41,7 +41,7 @@ struct ContentView: View {
                         .frame(height: proxy.size.height * verticalSpacerSize)
 
                     NavigationLink {
-                        RecordStatsView(gameStore: _gameStore)
+                        RecordStatsView(gameStore: _gameStore, isWomensField: true)
                     } label: {
                         Text(gameStore.ongoingGame == nil ? "New Women's Game" : "Resume Game")
                             .foregroundStyle(.teal)
@@ -57,7 +57,7 @@ struct ContentView: View {
                         .frame(height: proxy.size.height * verticalSpacerSize)
                     
                     NavigationLink {
-                        RecordStatsView(gameStore: _gameStore)
+                        RecordStatsView(gameStore: _gameStore, isWomensField: false)
                     } label: {
                         Text(gameStore.ongoingGame == nil ? "New Men's Game" : "Resume Game")
                             .foregroundStyle(.teal)

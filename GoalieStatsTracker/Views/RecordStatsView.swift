@@ -22,12 +22,15 @@ struct RecordStatsView: View {
     @State var is8Meter: Bool = false
             
     @State var shotsData = ShotsData()
+    
+    @State var womensField: Bool = true
 
     init() {
     }
 
-    init(gameStore: EnvironmentObject<GameStore>) {
+    init(gameStore: EnvironmentObject<GameStore>, isWomensField: Bool) {
         _gameStore = gameStore
+        _womensField = State(initialValue: isWomensField)
         let ongoingGame = self.gameStore.ongoingGame
         if ongoingGame != nil {
             self._shotsData = State(initialValue: ongoingGame!)
