@@ -153,7 +153,7 @@ struct ShotSelectorsView: View {
                     .frame(width: _geometry.size.width * 0.12, alignment: .leading)
             }
             
-            if _parent.womensField == true {
+            if _parent.shotsData.womensField == true {
                 Spacer()
                 HStack {
                     Circle()
