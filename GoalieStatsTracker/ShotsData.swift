@@ -29,7 +29,6 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     @Published var womensField: Bool = true
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(gameName)
         hasher.combine(gameTime)
     }
 
