@@ -16,8 +16,12 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     var halfYCoordinate: CGFloat = 0
     
     let image12meterMark: CGFloat = 300.0
+    let menTransitionMark: CGFloat = 380.0
     let imageFarthestMark: CGFloat = 35.0
-    let imageGoalMark: CGFloat = 650.0
+    
+    let womenGoalMark: CGFloat = 650.0
+    let menGoalMark: CGFloat = 750.0
+
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
@@ -75,12 +79,26 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         gameTime = NSDate().timeIntervalSince1970
     }
     
+    func imageGoalMark() -> CGFloat {
+        if womensField == true {
+            return womenGoalMark
+        }
+        else {
+            return menGoalMark
+        }
+    }
+    
     func setFieldSize(width: CGFloat) {
         self.fieldWidth = width
         let ratio = width / 1178.0
         self.minYCoordinate = imageFarthestMark * ratio
-        self.maxYCoordinate = imageGoalMark * ratio
-        self.halfYCoordinate = image12meterMark * ratio
+        self.maxYCoordinate = imageGoalMark() * ratio
+        if womensField == true {
+            self.halfYCoordinate = image12meterMark * ratio
+        }
+        else {
+            self.halfYCoordinate = menTransitionMark * ratio
+        }
     }
     
     struct Shot: Codable, Hashable {
@@ -198,6 +216,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             return nil
         }
         let grid = whichGrid(coordinate: location)
+        print("girf: \(grid)")
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
         totalShots += 1

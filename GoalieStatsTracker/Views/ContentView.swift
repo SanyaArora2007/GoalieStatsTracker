@@ -39,34 +39,50 @@ struct ContentView: View {
 
                     Spacer()
                         .frame(height: proxy.size.height * verticalSpacerSize)
-
-                    NavigationLink {
-                        RecordStatsView(gameStore: _gameStore, isWomensField: true)
-                    } label: {
-                        Text(gameStore.ongoingGame == nil ? "New Women's Game" : "Resume Game")
-                            .foregroundStyle(.teal)
-                            .font(.system(size: proxy.size.height * buttonFontSize))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: proxy.size.height * buttonRadiusSize)
-                                    .stroke(Color.gray, lineWidth: proxy.size.height * buttonBorderWidth)
-                                    .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
-                            )
+                    
+                    if gameStore.ongoingGame != nil {
+                        NavigationLink {
+                            RecordStatsView(gameStore: _gameStore, isWomensField: true)
+                        } label: {
+                            Text("Resume Game")
+                                .foregroundStyle(.teal)
+                                .font(.system(size: proxy.size.height * buttonFontSize))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: proxy.size.height * buttonRadiusSize)
+                                        .stroke(Color.gray, lineWidth: proxy.size.height * buttonBorderWidth)
+                                        .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
+                                )
+                        }
                     }
-                    
-                    Spacer()
-                        .frame(height: proxy.size.height * verticalSpacerSize)
-                    
-                    NavigationLink {
-                        RecordStatsView(gameStore: _gameStore, isWomensField: false)
-                    } label: {
-                        Text(gameStore.ongoingGame == nil ? "New Men's Game" : "Resume Game")
-                            .foregroundStyle(.teal)
-                            .font(.system(size: proxy.size.height * buttonFontSize))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: proxy.size.height * buttonRadiusSize)
-                                    .stroke(Color.gray, lineWidth: proxy.size.height * buttonBorderWidth)
-                                    .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
-                            )
+                    else {
+                        NavigationLink {
+                            RecordStatsView(gameStore: _gameStore, isWomensField: true)
+                        } label: {
+                            Text("New Women's Game")
+                                .foregroundStyle(.teal)
+                                .font(.system(size: proxy.size.height * buttonFontSize))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: proxy.size.height * buttonRadiusSize)
+                                        .stroke(Color.gray, lineWidth: proxy.size.height * buttonBorderWidth)
+                                        .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
+                                )
+                        }
+                        
+                        Spacer()
+                            .frame(height: proxy.size.height * verticalSpacerSize)
+                        
+                        NavigationLink {
+                            RecordStatsView(gameStore: _gameStore, isWomensField: false)
+                        } label: {
+                            Text("New Men's Game")
+                                .foregroundStyle(.teal)
+                                .font(.system(size: proxy.size.height * buttonFontSize))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: proxy.size.height * buttonRadiusSize)
+                                        .stroke(Color.gray, lineWidth: proxy.size.height * buttonBorderWidth)
+                                        .frame(width: proxy.size.width * buttonWidth, height: proxy.size.height * buttonHeight)
+                                )
+                        }
                     }
                     
                     Spacer()
