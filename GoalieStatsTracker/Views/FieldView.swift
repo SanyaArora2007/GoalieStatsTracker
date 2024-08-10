@@ -43,7 +43,7 @@ struct FieldView: View {
         Divider()
         
         ZStack {
-            Image("12MeterDiagram")
+            Image(_parent.shotsData.womensField == true ? "12MeterDiagram" : "MensFieldDiagram")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)

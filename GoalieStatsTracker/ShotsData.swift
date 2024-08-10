@@ -16,8 +16,12 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     var halfYCoordinate: CGFloat = 0
     
     let image12meterMark: CGFloat = 300.0
+    let menTransitionMark: CGFloat = 380.0
     let imageFarthestMark: CGFloat = 35.0
-    let imageGoalMark: CGFloat = 650.0
+    
+    let womenGoalMark: CGFloat = 650.0
+    let menGoalMark: CGFloat = 750.0
+
     
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
@@ -26,20 +30,19 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     @Published var shots: [Shot] = []
     @Published var gameName: String = ""
     @Published var gameTime: TimeInterval
+    @Published var womensField: Bool = true
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(gameName)
         hasher.combine(gameTime)
     }
 
     static func == (lhs: ShotsData, rhs: ShotsData) -> Bool {
         return
-            lhs.gameName == rhs.gameName &&
             lhs.gameTime == rhs.gameTime
     }
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime
+        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField
     }
     
     func encode(to encoder: Encoder) throws {
@@ -51,6 +54,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         try container.encode(shots, forKey: .shots)
         try container.encode(gameName, forKey: .gameName)
         try container.encode(gameTime, forKey: .gameTime)
+        try container.encode(womensField, forKey: .womensField)
     }
     
     required init(from decoder: Decoder) throws {
@@ -63,18 +67,38 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         shots = try container.decode(Array.self, forKey: .shots)
         gameName = try container.decode(String.self, forKey: .gameName)
         gameTime = try container.decode(TimeInterval.self, forKey: .gameTime)
+        do {
+            womensField = try container.decode(Bool.self, forKey: .womensField)
+        }
+        catch {
+            womensField = true
+        }
     }
     
     required init() {
         gameTime = NSDate().timeIntervalSince1970
     }
     
+    func imageGoalMark() -> CGFloat {
+        if womensField == true {
+            return womenGoalMark
+        }
+        else {
+            return menGoalMark
+        }
+    }
+    
     func setFieldSize(width: CGFloat) {
         self.fieldWidth = width
         let ratio = width / 1178.0
         self.minYCoordinate = imageFarthestMark * ratio
-        self.maxYCoordinate = imageGoalMark * ratio
-        self.halfYCoordinate = image12meterMark * ratio
+        self.maxYCoordinate = imageGoalMark() * ratio
+        if womensField == true {
+            self.halfYCoordinate = image12meterMark * ratio
+        }
+        else {
+            self.halfYCoordinate = menTransitionMark * ratio
+        }
     }
     
     struct Shot: Codable, Hashable {
@@ -192,6 +216,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             return nil
         }
         let grid = whichGrid(coordinate: location)
+        print("girf: \(grid)")
         let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
         runningScore += shot.calculateScore()
         totalShots += 1
