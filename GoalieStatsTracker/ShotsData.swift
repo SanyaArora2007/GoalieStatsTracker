@@ -35,7 +35,6 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
 
     static func == (lhs: ShotsData, rhs: ShotsData) -> Bool {
         return
-            lhs.gameName == rhs.gameName &&
             lhs.gameTime == rhs.gameTime
     }
     
