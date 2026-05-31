@@ -73,6 +73,7 @@ struct RecordStatsView: View {
     }
 
     func persistGoalieChange() {
+        pointsOn12Meter = shotsData.shots
         let game = shotsData
         let isPastGame = loadPastView
         Task {
