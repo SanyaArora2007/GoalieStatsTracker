@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct GoalieSelectorView: View {
-    
+
+    var disableAddingGoalie: Bool = false
+
     struct Goalie : Hashable {
         var name: String
         var selected: Bool
@@ -71,44 +73,46 @@ struct GoalieSelectorView: View {
                 .padding(.leading, 5)
             }
 
-            Button(
-                action: {
-                    showAddGoalieAlert = true
-                },
-                label: {
-                    Image(systemName: "person.badge.plus")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color.teal)
-                        .opacity(0.75)
-                        .frame(width:30)
-                }
-            )
-            .alert("Add Goalie", isPresented: $showAddGoalieAlert) {
-                TextField("Goalie Name", text: $newGoalieName)
-                Button("OK") {
-                    goalies.append(Goalie(name: newGoalieName, selected: false))
-                    newGoalieName = ""
-                }
-                Button("Cancel", role: .cancel) { newGoalieName = "" }
-            }
-            .alert("Change Goalie Name", isPresented: $showRenameGoalieAlert) {
-                TextField("Goalie Name", text: $renamedGoalieName)
-                Button("OK") {
-                    if let target = goalieBeingRenamed,
-                       let index = goalies.firstIndex(of: target) {
-                        goalies[index].name = renamedGoalieName
+            if !disableAddingGoalie {
+                Button(
+                    action: {
+                        showAddGoalieAlert = true
+                    },
+                    label: {
+                        Image(systemName: "person.badge.plus")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.teal)
+                            .opacity(0.75)
+                            .frame(width:30)
                     }
-                    renamedGoalieName = ""
-                    goalieBeingRenamed = nil
-                }
-                Button("Cancel", role: .cancel) {
-                    renamedGoalieName = ""
-                    goalieBeingRenamed = nil
-                }
+                )
+                .frame(alignment: .leading)
+                .padding(.trailing, 10)
             }
-            .frame(alignment: .leading)
-            .padding(.trailing, 10)
+        }
+        .alert("Add Goalie", isPresented: $showAddGoalieAlert) {
+            TextField("Goalie Name", text: $newGoalieName)
+            Button("OK") {
+                goalies.append(Goalie(name: newGoalieName, selected: false))
+                newGoalieName = ""
+            }
+            Button("Cancel", role: .cancel) { newGoalieName = "" }
+        }
+        .alert("Change Goalie Name", isPresented: $showRenameGoalieAlert) {
+            TextField("Goalie Name", text: $renamedGoalieName)
+            Button("OK") {
+                if let target = goalieBeingRenamed,
+                   let index = goalies.firstIndex(of: target) {
+                    goalies[index].name = renamedGoalieName
+                }
+                renamedGoalieName = ""
+                goalieBeingRenamed = nil
+            }
+            Button("Cancel", role: .cancel) {
+                renamedGoalieName = ""
+                goalieBeingRenamed = nil
+            }
         }
     }
 }
