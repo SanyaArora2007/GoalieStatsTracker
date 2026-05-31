@@ -21,10 +21,22 @@ struct GoalieSelectorView: View {
     @State private var renamedGoalieName: String = ""
     @State private var goalieBeingRenamed: String?
 
-    func renameSelectedGoalie(to newName: String) -> Bool {
-        guard let original = goalieBeingRenamed else { return false }
+    @State private var showDuplicateNameAlert = false
+    @State private var duplicateNameAttempted = ""
+
+    enum RenameResult {
+        case success
+        case noChange
+        case duplicate
+    }
+
+    func renameSelectedGoalie(to newName: String) -> RenameResult {
+        guard let original = goalieBeingRenamed else { return .noChange }
         let trimmed = newName.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty, trimmed != original else { return false }
+        guard !trimmed.isEmpty, trimmed != original else { return .noChange }
+        if shotsData.goalies.contains(trimmed) {
+            return .duplicate
+        }
         if let index = shotsData.goalies.firstIndex(of: original) {
             shotsData.goalies[index] = trimmed
         }
@@ -34,7 +46,7 @@ struct GoalieSelectorView: View {
         if selectedGoalieName == original {
             selectedGoalieName = trimmed
         }
-        return true
+        return .success
     }
 
     var body: some View {
@@ -99,9 +111,14 @@ struct GoalieSelectorView: View {
             TextField("Goalie Name", text: $newGoalieName)
             Button("OK") {
                 let trimmed = newGoalieName.trimmingCharacters(in: .whitespaces)
-                if !trimmed.isEmpty && !shotsData.goalies.contains(trimmed) {
-                    shotsData.goalies.append(trimmed)
-                    onGoaliesChanged()
+                if !trimmed.isEmpty {
+                    if shotsData.goalies.contains(trimmed) {
+                        duplicateNameAttempted = trimmed
+                        showDuplicateNameAlert = true
+                    } else {
+                        shotsData.goalies.append(trimmed)
+                        onGoaliesChanged()
+                    }
                 }
                 newGoalieName = ""
             }
@@ -110,8 +127,14 @@ struct GoalieSelectorView: View {
         .alert("Goalie", isPresented: $showRenameGoalieAlert) {
             TextField("Goalie Name", text: $renamedGoalieName)
             Button("OK") {
-                if renameSelectedGoalie(to: renamedGoalieName) {
+                switch renameSelectedGoalie(to: renamedGoalieName) {
+                case .success:
                     onGoaliesChanged()
+                case .duplicate:
+                    duplicateNameAttempted = renamedGoalieName.trimmingCharacters(in: .whitespaces)
+                    showDuplicateNameAlert = true
+                case .noChange:
+                    break
                 }
                 renamedGoalieName = ""
                 goalieBeingRenamed = nil
@@ -120,6 +143,11 @@ struct GoalieSelectorView: View {
                 renamedGoalieName = ""
                 goalieBeingRenamed = nil
             }
+        }
+        .alert("Problem!", isPresented: $showDuplicateNameAlert) {
+            Button("OK", role: .cancel) { duplicateNameAttempted = "" }
+        } message: {
+            Text("Two goalies can't have the same name (\(duplicateNameAttempted)).")
         }
     }
 }
