@@ -76,8 +76,11 @@ struct GoalieSelectorView: View {
             )
             .alert("Add Goalie", isPresented: $showAddGoalieAlert) {
                 TextField("Goalie Name", text: $newGoalieName)
-                Button("OK") { goalies.append(Goalie(name: newGoalieName, selected: false)) }
-                Button("Cancel", role: .cancel) {}
+                Button("OK") {
+                    goalies.append(Goalie(name: newGoalieName, selected: false))
+                    newGoalieName = ""
+                }
+                Button("Cancel", role: .cancel) { newGoalieName = "" }
             }
             .frame(alignment: .leading)
             .padding(.trailing, 10)

@@ -49,6 +49,7 @@ struct RecordStatsView: View {
             ScrollView(.vertical) {
                 VStack {
                     GameTitleView(parent: self, geometry: proxy)
+                    GoalieSelectorView()
                     VStack {
                         ShotSelectorsView(parent: self, geometry: proxy)
                         FieldView(parent: self, geometry: proxy)
