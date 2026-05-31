@@ -30,18 +30,26 @@ struct LoadPastView: View {
                             NavigationLink {
                                 RecordStatsView(gameStore: _gameStore, shotsData: game)
                             } label: {
-                                VStack {
-                                    Text(game.gameName)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
-                                    Spacer()
-                                        .frame(height: proxy.size.height * 0.0075)
-                                    Text(dateFormat.string(from: Date(timeIntervalSince1970:game.gameTime)))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .font(.system(size: proxy.size.height * 0.015, weight: .light))
+                                HStack {
+                                    Image(game.womensField == true ? "WomanRunning" : "ManRunning")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: proxy.size.width * 0.1)
+                                    VStack {
+                                        Text(game.gameName)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
+                                        Spacer()
+                                            .frame(height: proxy.size.height * 0.0075)
+                                        Text(dateFormat.string(from: Date(timeIntervalSince1970:game.gameTime)))
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.system(size: proxy.size.height * 0.015, weight: .light))
+                                    }
                                 }
                             }
+                            Divider()
                         }
+                        .listRowSeparator(.hidden)
                     }
                     .onDelete { indexes in
                         Task {

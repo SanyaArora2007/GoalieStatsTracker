@@ -15,6 +15,8 @@ struct GameTitleView: View {
 
     private var dateFormat: DateFormatter = DateFormatter()
     
+    @FocusState private var isGameNameFocused: Bool
+    
     init(parent: RecordStatsView, geometry: GeometryProxy) {
         _parent = parent
         _geometry = geometry
@@ -24,24 +26,43 @@ struct GameTitleView: View {
     
     var body: some View {
         Spacer()
-            .frame(height: _geometry.size.height * 0.05)
+            .frame(height: _geometry.size.height * 0.04)
 
         if _parent.loadPastView == true {
             VStack {
-                TextField("", text: _parent.$shotsData.gameName)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: _geometry.size.height * 0.03))
-                    .foregroundStyle(Color.black)
-                    .onChange(of: _parent.shotsData.gameName) { newValue in
-                        Task {
-                            do {
-                                try await update()
-                            }
-                            catch {
-                                fatalError(error.localizedDescription)
+                HStack {
+                    TextField("", text: _parent.$shotsData.gameName)
+                        .focused($isGameNameFocused)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: _geometry.size.height * 0.03))
+                        .foregroundStyle(Color.black)
+                        .fixedSize()
+                        .onChange(of: isGameNameFocused) { newValue in
+                            if newValue == false {
+                                Task {
+                                    do {
+                                        try await update()
+                                    }
+                                    catch {
+                                        fatalError(error.localizedDescription)
+                                    }
+                                }
                             }
                         }
-                    }
+                    Button(
+                        action: {
+                            isGameNameFocused = true
+                        },
+                        label: {
+                            Image(systemName: "square.and.pencil.circle.fill")
+                                .resizable()
+                                .foregroundColor(Color.teal)
+                                .scaledToFit()
+                                .frame(height: _geometry.size.height * 0.035)
+                                .opacity(0.75)
+                        }
+                    )
+                }
 
                 Spacer()
                     .frame(height: _geometry.size.height * 0.01)

@@ -152,36 +152,38 @@ struct ShotSelectorsView: View {
                     .gesture(tapSaveGesture)
                     .frame(width: _geometry.size.width * 0.12, alignment: .leading)
             }
-            Spacer()
-            HStack {
-                Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
-                    .background(Circle().fill(color8MGoalButton))
-                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .opacity(0.5)
-                    .gesture(tap8MeterGoalGesture)
-                Text("8M Goal")
-                    .font(.system(size: _geometry.size.width * textSize))
-                    .fontWeight(font8MGoalButton)
-                    .gesture(tap8MeterGoalGesture)
-                    .frame(width: _geometry.size.width * 0.17, alignment: .leading)
-            }
-            Spacer()
-            HStack {
-                Circle()
-                    .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
-                    .background(Circle().fill(color8MSaveButton))
-                    .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
-                    .opacity(0.5)
-                    .gesture(tap8MeterSaveGesture)
-                Text("8M Save")
-                    .font(.system(size: _geometry.size.width * textSize))
-                    .fontWeight(font8MSaveButton)
-                    .gesture(tap8MeterSaveGesture)
-                    .frame(width: _geometry.size.width * 0.17, alignment: .leading)
+            
+            if _parent.shotsData.womensField == true {
+                Spacer()
+                HStack {
+                    Circle()
+                        .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
+                        .background(Circle().fill(color8MGoalButton))
+                        .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
+                        .opacity(0.5)
+                        .gesture(tap8MeterGoalGesture)
+                    Text("8M Goal")
+                        .font(.system(size: _geometry.size.width * textSize))
+                        .fontWeight(font8MGoalButton)
+                        .gesture(tap8MeterGoalGesture)
+                        .frame(width: _geometry.size.width * 0.17, alignment: .leading)
+                }
+                Spacer()
+                HStack {
+                    Circle()
+                        .strokeBorder(.black, lineWidth: _geometry.size.width * strokeWidth)
+                        .background(Circle().fill(color8MSaveButton))
+                        .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
+                        .opacity(0.5)
+                        .gesture(tap8MeterSaveGesture)
+                    Text("8M Save")
+                        .font(.system(size: _geometry.size.width * textSize))
+                        .fontWeight(font8MSaveButton)
+                        .gesture(tap8MeterSaveGesture)
+                        .frame(width: _geometry.size.width * 0.17, alignment: .leading)
+                }
             }
             Spacer()
         }
-
     }
 }
