@@ -56,7 +56,8 @@ struct RecordStatsView: View {
                     GoalieSelectorView(
                         shotsData: shotsData,
                         selectedGoalieName: $selectedGoalieName,
-                        disableAddingGoalie: loadPastView
+                        disableAddingGoalie: loadPastView,
+                        onGoaliesChanged: persistGoalieChange
                     )
                     VStack {
                         ShotSelectorsView(parent: self, geometry: proxy)
@@ -67,6 +68,23 @@ struct RecordStatsView: View {
                     .disabled(disable)
                 }
                 .navigationBarBackButtonHidden(true)
+            }
+        }
+    }
+
+    func persistGoalieChange() {
+        let game = shotsData
+        let isPastGame = loadPastView
+        Task {
+            do {
+                if isPastGame {
+                    try await gameStore.update(game: game)
+                } else {
+                    try await gameStore.saveOngoingGame(game: game)
+                }
+            }
+            catch {
+                // don't surface errors mid-game
             }
         }
     }

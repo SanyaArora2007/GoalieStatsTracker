@@ -12,6 +12,7 @@ struct GoalieSelectorView: View {
     @ObservedObject var shotsData: ShotsData
     @Binding var selectedGoalieName: String
     var disableAddingGoalie: Bool = false
+    var onGoaliesChanged: () -> Void = {}
 
     @State private var showAddGoalieAlert = false
     @State private var newGoalieName: String = ""
@@ -20,10 +21,10 @@ struct GoalieSelectorView: View {
     @State private var renamedGoalieName: String = ""
     @State private var goalieBeingRenamed: String?
 
-    func renameSelectedGoalie(to newName: String) {
-        guard let original = goalieBeingRenamed else { return }
+    func renameSelectedGoalie(to newName: String) -> Bool {
+        guard let original = goalieBeingRenamed else { return false }
         let trimmed = newName.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty, trimmed != original else { return }
+        guard !trimmed.isEmpty, trimmed != original else { return false }
         if let index = shotsData.goalies.firstIndex(of: original) {
             shotsData.goalies[index] = trimmed
         }
@@ -33,6 +34,7 @@ struct GoalieSelectorView: View {
         if selectedGoalieName == original {
             selectedGoalieName = trimmed
         }
+        return true
     }
 
     var body: some View {
@@ -99,6 +101,7 @@ struct GoalieSelectorView: View {
                 let trimmed = newGoalieName.trimmingCharacters(in: .whitespaces)
                 if !trimmed.isEmpty && !shotsData.goalies.contains(trimmed) {
                     shotsData.goalies.append(trimmed)
+                    onGoaliesChanged()
                 }
                 newGoalieName = ""
             }
@@ -107,7 +110,9 @@ struct GoalieSelectorView: View {
         .alert("Goalie", isPresented: $showRenameGoalieAlert) {
             TextField("Goalie Name", text: $renamedGoalieName)
             Button("OK") {
-                renameSelectedGoalie(to: renamedGoalieName)
+                if renameSelectedGoalie(to: renamedGoalieName) {
+                    onGoaliesChanged()
+                }
                 renamedGoalieName = ""
                 goalieBeingRenamed = nil
             }
