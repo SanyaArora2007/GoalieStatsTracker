@@ -27,6 +27,10 @@ struct GoalieSelectorView: View {
     @State private var showAddGoalieAlert = false
     @State private var newGoalieName: String = ""
 
+    @State private var showRenameGoalieAlert = false
+    @State private var renamedGoalieName: String = ""
+    @State private var goalieBeingRenamed: Goalie?
+
     var body: some View {
         HStack {
             Text("Goalies")
@@ -36,8 +40,14 @@ struct GoalieSelectorView: View {
                     ForEach(goalies, id: \.self) { goalie in
                         Button(
                             action: {
-                                withAnimation {
-                                    select(name: goalie.name)
+                                if goalie.selected {
+                                    goalieBeingRenamed = goalie
+                                    renamedGoalieName = goalie.name
+                                    showRenameGoalieAlert = true
+                                } else {
+                                    withAnimation {
+                                        select(name: goalie.name)
+                                    }
                                 }
                             },
                             label: {
@@ -81,6 +91,21 @@ struct GoalieSelectorView: View {
                     newGoalieName = ""
                 }
                 Button("Cancel", role: .cancel) { newGoalieName = "" }
+            }
+            .alert("Change Goalie Name", isPresented: $showRenameGoalieAlert) {
+                TextField("Goalie Name", text: $renamedGoalieName)
+                Button("OK") {
+                    if let target = goalieBeingRenamed,
+                       let index = goalies.firstIndex(of: target) {
+                        goalies[index].name = renamedGoalieName
+                    }
+                    renamedGoalieName = ""
+                    goalieBeingRenamed = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    renamedGoalieName = ""
+                    goalieBeingRenamed = nil
+                }
             }
             .frame(alignment: .leading)
             .padding(.trailing, 10)
