@@ -23,7 +23,7 @@ struct FieldView: View {
     var draw12MeterCircle: some Gesture {
         SpatialTapGesture()
             .onEnded() { event in
-                let shot = _parent.shotsData.newShot(goal:_parent.isGoal, eightMeter:_parent.is8Meter, location:event.location)
+                let shot = _parent.shotsData.newShot(goal:_parent.isGoal, eightMeter:_parent.is8Meter, location:event.location, goalieName: _parent.selectedGoalieName)
                 if shot != nil {
                     _parent.pointsOn12Meter.append(shot!)
                     Task {
@@ -47,15 +47,16 @@ struct FieldView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)
-            ForEach(_parent.pointsOn12Meter, id: \.self) { shot in
+            ForEach(_parent.pointsOn12Meter.filter { $0.goalieName == _parent.selectedGoalieName }, id: \.self) { shot in
                 ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
             if _parent.loadPastView == false {
                 Button(
                     action: {
-                        _parent.shotsData.removeLastShot()
-                        if !_parent.pointsOn12Meter.isEmpty {
-                            _parent.pointsOn12Meter.removeLast()
+                        let goalie = _parent.selectedGoalieName
+                        _parent.shotsData.removeLastShot(forGoalie: goalie)
+                        if let idx = _parent.pointsOn12Meter.lastIndex(where: { $0.goalieName == goalie }) {
+                            _parent.pointsOn12Meter.remove(at: idx)
                         }
                         Task {
                             do {

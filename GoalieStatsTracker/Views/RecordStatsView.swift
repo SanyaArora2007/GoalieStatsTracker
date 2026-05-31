@@ -22,7 +22,9 @@ struct RecordStatsView: View {
     @State var is8Meter: Bool = false
             
     @State var shotsData = ShotsData()
-    
+
+    @State var selectedGoalieName: String = ShotsData.defaultGoalieName
+
     init() {
     }
 
@@ -33,6 +35,7 @@ struct RecordStatsView: View {
         if ongoingGame != nil {
             self._shotsData = State(initialValue: ongoingGame!)
             self._pointsOn12Meter = State(initialValue: ongoingGame!.shots)
+            self._selectedGoalieName = State(initialValue: ongoingGame!.goalies.first ?? ShotsData.defaultGoalieName)
         }
     }
     
@@ -40,6 +43,7 @@ struct RecordStatsView: View {
         _gameStore = gameStore
         _shotsData = State(initialValue: shotsData)
         _pointsOn12Meter = State(initialValue: shotsData.shots)
+        _selectedGoalieName = State(initialValue: shotsData.goalies.first ?? ShotsData.defaultGoalieName)
         loadPastView = true
         disable = true
     }
@@ -49,7 +53,11 @@ struct RecordStatsView: View {
             ScrollView(.vertical) {
                 VStack {
                     GameTitleView(parent: self, geometry: proxy)
-                    GoalieSelectorView(disableAddingGoalie: loadPastView)
+                    GoalieSelectorView(
+                        shotsData: shotsData,
+                        selectedGoalieName: $selectedGoalieName,
+                        disableAddingGoalie: loadPastView
+                    )
                     VStack {
                         ShotSelectorsView(parent: self, geometry: proxy)
                         FieldView(parent: self, geometry: proxy)
