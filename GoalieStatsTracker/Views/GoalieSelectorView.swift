@@ -51,7 +51,8 @@ struct GoalieSelectorView: View {
 
     var body: some View {
         HStack {
-            Text("Goalies")
+            Text("Goalies:")
+                .fontWeight(.medium)
                 .padding(.leading, 8)
             ScrollView(.horizontal) {
                 HStack(spacing: 5) {
