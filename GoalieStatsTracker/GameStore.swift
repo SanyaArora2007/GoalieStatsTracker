@@ -62,12 +62,10 @@ class GameStore: ObservableObject {
 
     func update(game: ShotsData) async throws {
         let task = Task {
-            for var existingGame in storage {
-                if existingGame.gameTime == game.gameTime {
-                    existingGame = game
-                }
+            if let index = storage.firstIndex(where: { $0.gameTime == game.gameTime }) {
+                storage[index] = game
             }
-            
+
             let data = try JSONEncoder().encode(storage)
             let outfile = try GameStore.fileURL()
             try data.write(to: outfile)
