@@ -73,8 +73,9 @@ struct LoadPastView: View {
     
     func deleteGame(offsets: IndexSet) async {
         do {
+            let gamesToRemove = offsets.map { games[$0] }
             games.remove(atOffsets: offsets)
-            try await gameStore.remove(offsets: offsets)
+            try await gameStore.remove(games: gamesToRemove)
         }
         catch {
             fatalError(error.localizedDescription)
