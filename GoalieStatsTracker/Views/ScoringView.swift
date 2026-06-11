@@ -20,11 +20,11 @@ struct ScoringView: View {
         _geometry = geometry
     }
     
-    func scoreColor() -> Color {
-        if _parent.shotsData.runningScore < 0 {
+    func scoreColor(_ score: Float) -> Color {
+        if score < 0 {
             return Color.red
         }
-        else if _parent.shotsData.runningScore > 0 {
+        else if score > 0 {
             return Color.blue
         }
         else {
@@ -33,13 +33,19 @@ struct ScoringView: View {
     }
     
     var body: some View {
+        let goalie = _parent.selectedGoalieName
+        let runningScore = _parent.shotsData.runningScore(forGoalie: goalie)
+        let saves = _parent.shotsData.saves(forGoalie: goalie)
+        let totalShots = _parent.shotsData.totalShots(forGoalie: goalie)
+        let savePercentage = _parent.shotsData.savePercentage(forGoalie: goalie)
+
         VStack {
             HStack {
                 Text(_parent.loadPastView ? "Score:" : "Running Score:")
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * scoreFontSize, weight: .light))
-                Text(String(format: "%.1f", _parent.shotsData.runningScore))
-                    .foregroundColor(scoreColor())
+                Text(String(format: "%.1f", runningScore))
+                    .foregroundColor(scoreColor(runningScore))
                     .font(.system(size: _geometry.size.height * scoreFontSize, weight: .bold))
             }
             
@@ -51,7 +57,7 @@ struct ScoringView: View {
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * shotsFontSize, weight: .light))
                     .frame(width: _geometry.size.width*0.5, alignment: .trailing)
-                Text("\(_parent.shotsData.saves)  (\(_parent.shotsData.savePercentage)%)")
+                Text("\(saves)  (\(savePercentage)%)")
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * shotsFontSize, weight: .bold))
                     .frame(width: _geometry.size.width*0.5, alignment: .leading)
@@ -62,7 +68,7 @@ struct ScoringView: View {
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * shotsFontSize, weight: .light))
                     .frame(width: _geometry.size.width*0.5, alignment: .trailing)
-                Text("\(_parent.shotsData.totalShots)")
+                Text("\(totalShots)")
                     .foregroundColor(Color.black)
                     .font(.system(size: _geometry.size.height * shotsFontSize, weight: .bold))
                     .frame(width: _geometry.size.width*0.5, alignment: .leading)

@@ -23,6 +23,8 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     let menGoalMark: CGFloat = 750.0
 
     
+    static let defaultGoalieName: String = "Me"
+
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
     @Published var saves: Int = 0
@@ -31,6 +33,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     @Published var gameName: String = ""
     @Published var gameTime: TimeInterval
     @Published var womensField: Bool = true
+    @Published var goalies: [String] = [ShotsData.defaultGoalieName]
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(gameTime)
@@ -42,7 +45,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     }
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField
+        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField, goalies
     }
     
     func encode(to encoder: Encoder) throws {
@@ -55,6 +58,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         try container.encode(gameName, forKey: .gameName)
         try container.encode(gameTime, forKey: .gameTime)
         try container.encode(womensField, forKey: .womensField)
+        try container.encode(goalies, forKey: .goalies)
     }
     
     required init(from decoder: Decoder) throws {
@@ -73,6 +77,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         catch {
             womensField = true
         }
+        goalies = (try? container.decode([String].self, forKey: .goalies)) ?? [ShotsData.defaultGoalieName]
     }
     
     required init() {
@@ -106,8 +111,29 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         var wasItEightMeter: Bool
         var gridItCameFrom: Int
         var coordinate: CGPoint
-        
-        
+        var goalieName: String = ShotsData.defaultGoalieName
+
+        enum CodingKeys: CodingKey {
+            case wasItAGoal, wasItEightMeter, gridItCameFrom, coordinate, goalieName
+        }
+
+        init(wasItAGoal: Bool, wasItEightMeter: Bool, gridItCameFrom: Int, coordinate: CGPoint, goalieName: String) {
+            self.wasItAGoal = wasItAGoal
+            self.wasItEightMeter = wasItEightMeter
+            self.gridItCameFrom = gridItCameFrom
+            self.coordinate = coordinate
+            self.goalieName = goalieName
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            wasItAGoal = try container.decode(Bool.self, forKey: .wasItAGoal)
+            wasItEightMeter = try container.decode(Bool.self, forKey: .wasItEightMeter)
+            gridItCameFrom = try container.decode(Int.self, forKey: .gridItCameFrom)
+            coordinate = try container.decode(CGPoint.self, forKey: .coordinate)
+            goalieName = (try? container.decode(String.self, forKey: .goalieName)) ?? ShotsData.defaultGoalieName
+        }
+
         // https://stackoverflow.com/questions/41972319/make-struct-hashable
         
         func hash(into hasher: inout Hasher) {
@@ -211,13 +237,13 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         }
     }
         
-    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint) -> Shot? {
+    func newShot(goal: Bool, eightMeter: Bool, location: CGPoint, goalieName: String) -> Shot? {
         if location.y > maxYCoordinate || location.y < minYCoordinate {
             return nil
         }
         let grid = whichGrid(coordinate: location)
         print("girf: \(grid)")
-        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location)
+        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location, goalieName: goalieName)
         runningScore += shot.calculateScore()
         totalShots += 1
         
@@ -233,23 +259,48 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         return shot
     }
     
-    func removeLastShot() {
-        if shots.isEmpty == true {
+    func shots(forGoalie goalieName: String) -> [Shot] {
+        return shots.filter { $0.goalieName == goalieName }
+    }
+
+    func totalShots(forGoalie goalieName: String) -> Int {
+        return shots(forGoalie: goalieName).count
+    }
+
+    func saves(forGoalie goalieName: String) -> Int {
+        return shots(forGoalie: goalieName).filter { $0.wasItAGoal == false }.count
+    }
+
+    func runningScore(forGoalie goalieName: String) -> Float {
+        return shots(forGoalie: goalieName).reduce(0) { $0 + $1.calculateScore() }
+    }
+
+    func savePercentage(forGoalie goalieName: String) -> Int {
+        let total = totalShots(forGoalie: goalieName)
+        if total == 0 {
+            return 0
+        }
+        return Int((Float(saves(forGoalie: goalieName)) / Float(total)) * 100)
+    }
+
+    func removeLastShot(forGoalie goalieName: String) {
+        guard let index = shots.lastIndex(where: { $0.goalieName == goalieName }) else {
             return
         }
-        if shots.last!.wasItAGoal == false {
+        let removed = shots[index]
+        if removed.wasItAGoal == false {
             saves -= 1
         }
         totalShots -= 1
-        runningScore -= shots.last!.calculateScore()
-        
+        runningScore -= removed.calculateScore()
+
         if totalShots == 0 {
             savePercentage = 0
         }
         else {
             savePercentage = Int((Float(saves) / Float(totalShots)) * 100)
         }
-        shots.removeLast()
+        shots.remove(at: index)
     }
         
     
