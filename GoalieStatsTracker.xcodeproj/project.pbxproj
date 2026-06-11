@@ -68,6 +68,7 @@
 		03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITests.swift; sourceTree = "<group>"; };
 		03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieSelectorView.swift; sourceTree = "<group>"; };
+		7EA062F02FCC9C1100C1332E /* GoalieStatsTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoalieStatsTracker.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +137,7 @@
 		03E507A42AC6794F00134DD0 /* GoalieStatsTracker */ = {
 			isa = PBXGroup;
 			children = (
+				7EA062F02FCC9C1100C1332E /* GoalieStatsTracker.entitlements */,
 				038BF2E72AC67DA30047DDF3 /* Views */,
 				036D72622AE41D8B000E50C6 /* ShotsData.swift */,
 				030670E32AFF0BC9007F82EF /* GameStore.swift */,
@@ -474,6 +476,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoalieStatsTracker/GoalieStatsTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GoalieStatsTracker/Preview Content\"";
@@ -506,6 +509,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoalieStatsTracker/GoalieStatsTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GoalieStatsTracker/Preview Content\"";
