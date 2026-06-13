@@ -12,6 +12,17 @@ import SwiftUI
 class GameStore: ObservableObject {
     @Published var storage: [ShotsData] = []
     @Published var ongoingGame: ShotsData? = nil
+
+    var seasons: [String] {
+        var result: [String] = []
+        for game in storage {
+            let name = game.seasonName
+            if name.isEmpty == false && result.contains(name) == false {
+                result.append(name)
+            }
+        }
+        return result
+    }
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -94,6 +105,21 @@ class GameStore: ObservableObject {
             } catch {}
         }
         _  = await task.value
+    }
+
+    func removeSeason(named seasonName: String) async throws {
+        let task = Task {
+            objectWillChange.send()
+            for game in storage {
+                if game.seasonName == seasonName {
+                    game.seasonName = ""
+                }
+            }
+            let data = try JSONEncoder().encode(storage)
+            let outfile = try GameStore.fileURL()
+            try data.write(to: outfile)
+        }
+        _ = try await task.value
     }
 
     func remove(offsets: IndexSet) async throws {

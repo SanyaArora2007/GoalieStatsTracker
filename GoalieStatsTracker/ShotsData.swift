@@ -34,7 +34,8 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     @Published var gameTime: TimeInterval
     @Published var womensField: Bool = true
     @Published var goalies: [String] = [ShotsData.defaultGoalieName]
-    
+    @Published var seasonName: String = ""
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(gameTime)
     }
@@ -45,7 +46,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     }
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField, goalies
+        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField, goalies, seasonName
     }
     
     func encode(to encoder: Encoder) throws {
@@ -59,6 +60,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         try container.encode(gameTime, forKey: .gameTime)
         try container.encode(womensField, forKey: .womensField)
         try container.encode(goalies, forKey: .goalies)
+        try container.encode(seasonName, forKey: .seasonName)
     }
     
     required init(from decoder: Decoder) throws {
@@ -78,6 +80,7 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             womensField = true
         }
         goalies = (try? container.decode([String].self, forKey: .goalies)) ?? [ShotsData.defaultGoalieName]
+        seasonName = (try? container.decode(String.self, forKey: .seasonName)) ?? ""
     }
     
     required init() {
