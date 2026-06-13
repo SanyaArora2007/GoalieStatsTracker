@@ -11,10 +11,19 @@ struct RecordStatsView: View {
     
     var loadPastView: Bool = false
     var disable: Bool = false
+    var popToSeasonsView: Binding<Bool>? = nil
     
     @EnvironmentObject var gameStore: GameStore
-    
+
+    @Environment(\.presentationMode) var presentationMode
+
     @State private var runningScoreColor: Color = Color.black
+
+    @State var showSavePopup: Bool = false
+
+    // shotsData is a class held in @State, so mutating its seasonName alone
+    // does not re-render this view; this gets toggled to force the refresh
+    @State private var seasonAssignmentRefresh: Bool = false
     
     @State var pointsOn12Meter: [ShotsData.Shot] = []
 
@@ -39,36 +48,95 @@ struct RecordStatsView: View {
         }
     }
     
-    init(gameStore: EnvironmentObject<GameStore>, shotsData: ShotsData) {
+    init(gameStore: EnvironmentObject<GameStore>, shotsData: ShotsData, popToSeasonsView: Binding<Bool>? = nil) {
         _gameStore = gameStore
         _shotsData = State(initialValue: shotsData)
         _pointsOn12Meter = State(initialValue: shotsData.shots)
         _selectedGoalieName = State(initialValue: shotsData.goalies.first ?? ShotsData.defaultGoalieName)
         loadPastView = true
         disable = true
+        self.popToSeasonsView = popToSeasonsView
     }
     
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView(.vertical) {
-                VStack {
-                    GameTitleView(parent: self, geometry: proxy)
-                    GoalieSelectorView(
-                        shotsData: shotsData,
-                        selectedGoalieName: $selectedGoalieName,
-                        disableAddingGoalie: loadPastView,
-                        onGoaliesChanged: persistGoalieChange
-                    )
+        ZStack {
+            GeometryReader { proxy in
+                ScrollView(.vertical) {
                     VStack {
-                        ShotSelectorsView(parent: self, geometry: proxy)
-                        FieldView(parent: self, geometry: proxy)
-                        ScoringView(parent: self, geometry: proxy)
-                        GameButtonsView(parent: self, geometry: proxy)
+                        GameTitleView(parent: self, geometry: proxy)
+                        GoalieSelectorView(
+                            shotsData: shotsData,
+                            selectedGoalieName: $selectedGoalieName,
+                            disableAddingGoalie: loadPastView,
+                            onGoaliesChanged: persistGoalieChange
+                        )
+                        VStack {
+                            ShotSelectorsView(parent: self, geometry: proxy)
+                            FieldView(parent: self, geometry: proxy)
+                            ScoringView(parent: self, geometry: proxy)
+                            GameButtonsView(parent: self, geometry: proxy)
+                        }
+                        .disabled(disable)
+
+                        if loadPastView == true && shotsData.seasonName.isEmpty && gameStore.seasons.isEmpty == false {
+                            Spacer()
+                                .frame(height: proxy.size.height * 0.02)
+                            Menu {
+                                ForEach(gameStore.seasons, id: \.self) { season in
+                                    Button(season) {
+                                        addGameToSeason(season)
+                                    }
+                                }
+                            } label: {
+                                Text("Add Game to Season")
+                                    .foregroundStyle(.teal)
+                                    .font(.system(size: proxy.size.height * 0.0225))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: proxy.size.width * 0.02)
+                                            .stroke(Color.gray, lineWidth: proxy.size.height * 0.004)
+                                            .frame(width: proxy.size.width * 0.45, height: proxy.size.height * 0.045)
+                                    )
+                            }
+                            Spacer()
+                                .frame(height: proxy.size.height * 0.02)
+                        }
                     }
-                    .disabled(disable)
+                    .navigationBarBackButtonHidden(loadPastView == false)
                 }
-                .navigationBarBackButtonHidden(true)
             }
+
+            if showSavePopup {
+                SaveGamePopupView(seasons: gameStore.seasons) { seasonName in
+                    showSavePopup = false
+                    shotsData.seasonName = seasonName
+                    let game = shotsData
+                    Task {
+                        do {
+                            try await gameStore.save(game: game)
+                        }
+                        catch {
+                            fatalError(error.localizedDescription)
+                        }
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+        }
+    }
+
+    func addGameToSeason(_ seasonName: String) {
+        shotsData.seasonName = seasonName
+        seasonAssignmentRefresh.toggle()
+        let game = shotsData
+        Task {
+            do {
+                try await gameStore.update(game: game)
+            }
+            catch {
+                // don't surface errors when assigning a season
+            }
+            popToSeasonsView?.wrappedValue = true
+            presentationMode.wrappedValue.dismiss()
         }
     }
 

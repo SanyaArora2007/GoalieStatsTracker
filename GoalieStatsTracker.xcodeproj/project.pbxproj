@@ -26,6 +26,8 @@
 		03E507C12AC6795000134DD0 /* GoalieStatsTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */; };
 		03E507C32AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */; };
 		7EA062F02FCC9B9300C1332E /* GoalieSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */; };
+		7EA062F22FCC9B9300C1332E /* SaveGamePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */; };
+		7EA062F42FCC9B9300C1332E /* SeasonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F32FCC9B9300C1332E /* SeasonsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +70,8 @@
 		03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITests.swift; sourceTree = "<group>"; };
 		03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieSelectorView.swift; sourceTree = "<group>"; };
+		7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveGamePopupView.swift; sourceTree = "<group>"; };
+		7EA062F32FCC9B9300C1332E /* SeasonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,8 @@
 				034585FA2B56FEFC00528EC3 /* ScoringView.swift */,
 				034585FC2B57005700528EC3 /* GameButtonsView.swift */,
 				034585FE2B57042B00528EC3 /* GameTitleView.swift */,
+				7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */,
+				7EA062F32FCC9B9300C1332E /* SeasonsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -311,6 +317,8 @@
 				03E507A62AC6794F00134DD0 /* GoalieStatsTrackerApp.swift in Sources */,
 				034585FB2B56FEFC00528EC3 /* ScoringView.swift in Sources */,
 				034585FD2B57005700528EC3 /* GameButtonsView.swift in Sources */,
+				7EA062F22FCC9B9300C1332E /* SaveGamePopupView.swift in Sources */,
+				7EA062F42FCC9B9300C1332E /* SeasonsView.swift in Sources */,
 				034585FF2B57042B00528EC3 /* GameTitleView.swift in Sources */,
 				030670E42AFF0BC9007F82EF /* GameStore.swift in Sources */,
 				034585F12B56407800528EC3 /* ShotSelectorsView.swift in Sources */,
