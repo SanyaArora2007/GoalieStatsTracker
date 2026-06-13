@@ -15,15 +15,16 @@ struct SeasonsView: View {
 
     @EnvironmentObject var gameStore: GameStore
 
-    @State private var showNewSeasonAlert = false
+    @State private var showNewSeasonPopup = false
     @State private var newSeasonName = ""
 
     var body: some View {
-        GeometryReader { proxy in
+        ZStack {
+            GeometryReader { proxy in
             List {
                 Button {
                     newSeasonName = ""
-                    showNewSeasonAlert = true
+                    showNewSeasonPopup = true
                 } label: {
                     Label("Create New Season", systemImage: "plus.circle.fill")
                         .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
@@ -67,14 +68,61 @@ struct SeasonsView: View {
             .toolbar {
                 EditButton()
             }
-            .alert("Create New Season", isPresented: $showNewSeasonAlert) {
-                TextField("Season name", text: $newSeasonName)
-                Button("Cancel", role: .cancel) {}
-                Button("Create") {
-                    gameStore.addSeason(named: newSeasonName)
+            }
+
+            if showNewSeasonPopup {
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: 0) {
+                        VStack(spacing: 8) {
+                            Text("Create New Season")
+                                .font(.headline)
+                                .multilineTextAlignment(.center)
+                            Text("Enter a name for the new season")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                            TextField("Season name", text: $newSeasonName)
+                                .textFieldStyle(.roundedBorder)
+                                .foregroundColor(.teal)
+                                .padding(.top, 8)
+                        }
+                        .padding()
+
+                        Divider()
+
+                        HStack(spacing: 0) {
+                            Button(role: .cancel) {
+                                showNewSeasonPopup = false
+                            } label: {
+                                Text("Cancel")
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            Divider()
+                                .frame(height: 44)
+                            Button {
+                                let name = newSeasonName.trimmingCharacters(in: .whitespaces)
+                                showNewSeasonPopup = false
+                                if name.isEmpty == false {
+                                    gameStore.addSeason(named: name)
+                                }
+                            } label: {
+                                Text("Create")
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: 300)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(Color(UIColor.systemBackground))
+                    )
+                    .padding(40)
                 }
-            } message: {
-                Text("Enter a name for the new season")
             }
         }
         .task {
