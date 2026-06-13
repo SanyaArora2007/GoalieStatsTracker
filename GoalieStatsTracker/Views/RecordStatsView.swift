@@ -82,7 +82,7 @@ struct RecordStatsView: View {
                         }
                         .disabled(disable)
 
-                        if loadPastView == true && shotsData.seasonName.isEmpty && gameStore.seasons.isEmpty == false {
+                        if loadPastView == true && shotsData.seasonName.isEmpty {
                             Spacer()
                                 .frame(height: proxy.size.height * 0.02)
                             Button {
