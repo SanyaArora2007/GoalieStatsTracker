@@ -12,7 +12,6 @@ struct GameButtonsView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var showSaveAlert = false
     @State private var showDiscardAlert = false
         
     var _parent: RecordStatsView
@@ -35,15 +34,7 @@ struct GameButtonsView: View {
             HStack(alignment: .center) {
                 Button(
                     action: {
-                        showSaveAlert = true
-                        Task {
-                            do {
-                                try await save()
-                            }
-                            catch {
-                                fatalError(error.localizedDescription)
-                            }
-                        }
+                        _parent.showSavePopup = true
                     },
                     label: {
                         ZStack {
@@ -55,18 +46,6 @@ struct GameButtonsView: View {
                                         .stroke(Color.gray, lineWidth: _geometry.size.height * buttonBorderWidth)
                                         .frame(width: _geometry.size.width * buttonWidth, height: _geometry.size.height * buttonHeight)
                                 )
-                                .alert(isPresented: $showSaveAlert) {
-                                    Alert(
-                                        title: Text("Game had been saved!"),
-                                        message: Text("Go to Load Past to view your stats"),
-                                        dismissButton: Alert.Button.default(
-                                            Text("Main Menu"),
-                                            action: {
-                                                presentationMode.wrappedValue.dismiss()
-                                            }
-                                        )
-                                    )
-                                }
                         }
                     }
                 )
@@ -105,15 +84,6 @@ struct GameButtonsView: View {
             }
         }
 
-    }
-    
-    func save() async throws {
-        do {
-            try await _parent.gameStore.save(game: _parent.shotsData)
-        }
-        catch {
-            fatalError(error.localizedDescription)
-        }
     }
     
     func discard() async {

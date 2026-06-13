@@ -19,6 +19,17 @@ class GameStore: ObservableObject {
     private static let syncedGameTimesKey = "GameStore.syncedGameTimes"
     private static let pendingCloudDeletesKey = "GameStore.pendingCloudDeletes"
 
+    var seasons: [String] {
+        var result: [String] = []
+        for game in storage {
+            let name = game.seasonName
+            if name.isEmpty == false && result.contains(name) == false {
+                result.append(name)
+            }
+        }
+        return result
+    }
+
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent("GoalieStatsTracker")
@@ -100,6 +111,28 @@ class GameStore: ObservableObject {
             } catch {}
         }
         _  = await task.value
+    }
+
+    func removeSeason(named seasonName: String) async throws {
+        let affectedGameTimes = storage
+            .filter { $0.seasonName == seasonName }
+            .map { $0.gameTime }
+        let task = Task {
+            objectWillChange.send()
+            for game in storage {
+                if game.seasonName == seasonName {
+                    game.seasonName = ""
+                }
+            }
+            let data = try JSONEncoder().encode(storage)
+            let outfile = try GameStore.fileURL()
+            try data.write(to: outfile)
+        }
+        _ = try await task.value
+        for gameTime in affectedGameTimes {
+            markUnsynced(gameTime)
+        }
+        syncWithCloud()
     }
 
     func remove(games gamesToRemove: [ShotsData]) async throws {

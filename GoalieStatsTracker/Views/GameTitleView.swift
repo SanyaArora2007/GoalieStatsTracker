@@ -71,6 +71,16 @@ struct GameTitleView: View {
                     .multilineTextAlignment(.center)
                     .font(.system(size: _geometry.size.height * 0.02, weight: .light))
                     .foregroundStyle(Color.black)
+
+                if _parent.shotsData.seasonName.isEmpty == false {
+                    Spacer()
+                        .frame(height: _geometry.size.height * 0.01)
+
+                    Text(_parent.shotsData.seasonName)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: _geometry.size.height * 0.02, weight: .light))
+                        .foregroundStyle(Color.black)
+                }
             }
         }
         else

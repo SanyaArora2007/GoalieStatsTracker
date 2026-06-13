@@ -9,60 +9,94 @@ import SwiftUI
 
 struct LoadPastView: View {
     @EnvironmentObject var gameStore: GameStore
-    
+
+    @Environment(\.presentationMode) var presentationMode
+
     @State private var games: [ShotsData] = []
-    
+
+    @State private var popToSeasonsView: Bool = false
+
+    private var seasonName: String? = nil
+
     private var dateFormat: DateFormatter = DateFormatter()
-    
+
     init() {
         self.dateFormat.dateStyle = .long
-        self.dateFormat.timeStyle = .short
+        self.dateFormat.timeStyle = .none
+    }
+
+    init(seasonName: String) {
+        self.init()
+        self.seasonName = seasonName
+    }
+
+    private var title: String {
+        guard let seasonName = seasonName else {
+            return "Games"
+        }
+        return seasonName.isEmpty ? "No Season" : seasonName
     }
     
     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-run-an-asynchronous-task-when-a-view-is-shown
     
     var body: some View {
         GeometryReader { proxy in
-            NavigationStack {
-                List {
-                    ForEach(games, id: \.self) { game in
-                        VStack(alignment: .leading) {
-                            NavigationLink {
-                                RecordStatsView(gameStore: _gameStore, shotsData: game)
-                            } label: {
-                                HStack {
-                                    Image(game.womensField == true ? "WomanRunning" : "ManRunning")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: proxy.size.width * 0.1)
-                                    VStack {
-                                        Text(game.gameName)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
-                                        Spacer()
-                                            .frame(height: proxy.size.height * 0.0075)
-                                        Text(dateFormat.string(from: Date(timeIntervalSince1970:game.gameTime)))
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .font(.system(size: proxy.size.height * 0.015, weight: .light))
-                                    }
+            List {
+                ForEach(games, id: \.self) { game in
+                    VStack(alignment: .leading) {
+                        NavigationLink {
+                            RecordStatsView(gameStore: _gameStore, shotsData: game, popToSeasonsView: $popToSeasonsView)
+                        } label: {
+                            HStack {
+                                Image(game.womensField == true ? "WomanRunning" : "ManRunning")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: proxy.size.width * 0.1)
+                                VStack {
+                                    Text(game.gameName)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
+                                    Spacer()
+                                        .frame(height: proxy.size.height * 0.0075)
+                                    Text(dateFormat.string(from: Date(timeIntervalSince1970:game.gameTime)))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: proxy.size.height * 0.015, weight: .light))
+                                    Spacer()
+                                        .frame(height: proxy.size.height * 0.0075)
+                                    Text(game.goalies.joined(separator: ", "))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.system(size: proxy.size.height * 0.015, weight: .light))
                                 }
                             }
-                            Divider()
                         }
-                        .listRowSeparator(.hidden)
+                        Divider()
                     }
-                    .onDelete { indexes in
-                        Task {
-                            await deleteGame(offsets: indexes)
-                        }
+                    .listRowSeparator(.hidden)
+                }
+                .onDelete { indexes in
+                    Task {
+                        await deleteGame(offsets: indexes)
                     }
                 }
-                .navigationTitle("Games")
-                
+            }
+            .navigationTitle(title)
+            .onAppear {
+                if popToSeasonsView == true {
+                    popToSeasonsView = false
+                    // wait for the pop animation from RecordStatsView to finish
+                    // before popping again, or the second dismiss is ignored
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
             }
             .task {
                 do {
-                    try await games = gameStore.load()
+                    var loaded = try await gameStore.load()
+                    if let seasonName = seasonName {
+                        loaded = loaded.filter { $0.seasonName == seasonName }
+                    }
+                    games = loaded
                 }
                 catch {
                     fatalError(error.localizedDescription)

@@ -89,9 +89,9 @@ struct ContentView: View {
                         .frame(height: proxy.size.height * verticalSpacerSize)
 
                     NavigationLink {
-                        LoadPastView()
+                        SeasonsView()
                     } label: {
-                        Text("Load Past Games")
+                        Text("Seasons")
                             .foregroundStyle(.teal)
                             .font(.system(size: proxy.size.height * buttonFontSize))
                             .overlay(
