@@ -26,8 +26,8 @@
 		03E507C12AC6795000134DD0 /* GoalieStatsTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */; };
 		03E507C32AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */; };
 		7EA062F02FCC9B9300C1332E /* GoalieSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */; };
-		7EA062F32FCCA10000C1332E /* CloudGameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F22FCCA10000C1332E /* CloudGameStore.swift */; };
 		7EA062F22FCC9B9300C1332E /* SaveGamePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */; };
+		7EA062F32FCCA10000C1332E /* CloudGameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F22FCCA10000C1332E /* CloudGameStore.swift */; };
 		7EA062F42FCC9B9300C1332E /* SeasonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F32FCC9B9300C1332E /* SeasonsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -72,8 +72,8 @@
 		03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieSelectorView.swift; sourceTree = "<group>"; };
 		7EA062F02FCC9C1100C1332E /* GoalieStatsTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoalieStatsTracker.entitlements; sourceTree = "<group>"; };
-		7EA062F22FCCA10000C1332E /* CloudGameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGameStore.swift; sourceTree = "<group>"; };
 		7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveGamePopupView.swift; sourceTree = "<group>"; };
+		7EA062F22FCCA10000C1332E /* CloudGameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGameStore.swift; sourceTree = "<group>"; };
 		7EA062F32FCC9B9300C1332E /* SeasonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -507,7 +507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sanyaarora2025.lax-goalie";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -540,7 +540,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sanyaarora2025.lax-goalie";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
