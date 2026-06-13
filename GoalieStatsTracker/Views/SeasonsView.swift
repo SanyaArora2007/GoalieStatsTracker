@@ -15,9 +15,20 @@ struct SeasonsView: View {
 
     @EnvironmentObject var gameStore: GameStore
 
+    @State private var showNewSeasonAlert = false
+    @State private var newSeasonName = ""
+
     var body: some View {
         GeometryReader { proxy in
             List {
+                Button {
+                    newSeasonName = ""
+                    showNewSeasonAlert = true
+                } label: {
+                    Label("Create New Season", systemImage: "plus.circle.fill")
+                        .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
+                        .foregroundStyle(.teal)
+                }
                 ForEach(gameStore.seasons, id: \.self) { season in
                     NavigationLink {
                         LoadPastView(seasonName: season)
@@ -39,6 +50,9 @@ struct SeasonsView: View {
                         await deleteSeason(offsets: indexes)
                     }
                 }
+                .onMove { source, destination in
+                    gameStore.moveSeason(fromOffsets: source, toOffset: destination)
+                }
                 if gameStore.storage.contains(where: { $0.seasonName.isEmpty }) {
                     NavigationLink {
                         LoadPastView(seasonName: "")
@@ -50,6 +64,18 @@ struct SeasonsView: View {
                 }
             }
             .navigationTitle("Seasons")
+            .toolbar {
+                EditButton()
+            }
+            .alert("Create New Season", isPresented: $showNewSeasonAlert) {
+                TextField("Season name", text: $newSeasonName)
+                Button("Cancel", role: .cancel) {}
+                Button("Create") {
+                    gameStore.addSeason(named: newSeasonName)
+                }
+            } message: {
+                Text("Enter a name for the new season")
+            }
         }
         .task {
             do {

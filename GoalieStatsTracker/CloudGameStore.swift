@@ -15,8 +15,13 @@ class CloudGameStore {
 
     static let containerIdentifier = "iCloud.com.sanyaarora2025.lax-goalie"
     static let gameRecordType = "Game"
+    static let seasonsRecordType = "SeasonList"
     // CloudKit rejects operations with more than 400 records
     static let maxRecordsPerOperation = 200
+
+    // The ordered season list lives in a single record so its order is
+    // preserved as one unit.
+    private static let seasonsRecordName = "seasonList"
 
     private let container: CKContainer
     private let database: CKDatabase
@@ -116,6 +121,50 @@ class CloudGameStore {
         }
         catch let error as CKError where error.code == .unknownItem {
             // Already deleted or never synced
+        }
+    }
+
+    // MARK: - Seasons
+
+    private static func seasonsRecordID() -> CKRecord.ID {
+        CKRecord.ID(recordName: seasonsRecordName)
+    }
+
+    /// Uploads the ordered season list, overwriting the existing record.
+    /// Returns whether the save succeeded.
+    func saveSeasons(_ seasons: [String]) async -> Bool {
+        guard let payload = try? JSONEncoder().encode(seasons) else {
+            return false
+        }
+        let record = CKRecord(recordType: CloudGameStore.seasonsRecordType, recordID: CloudGameStore.seasonsRecordID())
+        record["payload"] = payload as CKRecordValue
+        do {
+            _ = try await database.modifyRecords(
+                saving: [record],
+                deleting: [],
+                savePolicy: .allKeys,
+                atomically: false
+            )
+            return true
+        }
+        catch {
+            return false
+        }
+    }
+
+    /// Fetches the ordered season list, or nil if no record exists yet.
+    func fetchSeasons() async throws -> [String]? {
+        do {
+            let record = try await database.record(for: CloudGameStore.seasonsRecordID())
+            guard let payload = record["payload"] as? Data,
+                  let seasons = try? JSONDecoder().decode([String].self, from: payload) else {
+                return nil
+            }
+            return seasons
+        }
+        catch let error as CKError where error.code == .unknownItem {
+            // No season list has been saved yet
+            return nil
         }
     }
 }

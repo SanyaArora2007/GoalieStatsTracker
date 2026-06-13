@@ -18,9 +18,19 @@ class GameStore: ObservableObject {
 
     private static let syncedGameTimesKey = "GameStore.syncedGameTimes"
     private static let pendingCloudDeletesKey = "GameStore.pendingCloudDeletes"
+    private static let seasonOrderKey = "GameStore.seasonOrder"
+    private static let seasonsNeedsPushKey = "GameStore.seasonsNeedsPush"
+
+    // The user-controlled ordering of seasons. This is the source of truth for
+    // order and lets seasons exist before any game references them; names found
+    // on games but missing here are appended by `seasons`.
+    @Published private var seasonOrder: [String] =
+        UserDefaults.standard.stringArray(forKey: GameStore.seasonOrderKey)
+        ?? UserDefaults.standard.stringArray(forKey: "GameStore.createdSeasons")
+        ?? []
 
     var seasons: [String] {
-        var result: [String] = []
+        var result: [String] = seasonOrder
         for game in storage {
             let name = game.seasonName
             if name.isEmpty == false && result.contains(name) == false {
@@ -28,6 +38,28 @@ class GameStore: ObservableObject {
             }
         }
         return result
+    }
+
+    func addSeason(named name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard trimmed.isEmpty == false, seasons.contains(trimmed) == false else { return }
+        seasonOrder.append(trimmed)
+        persistSeasonOrder()
+        markSeasonsNeedsPush()
+        pushSeasonsToCloud()
+    }
+
+    func moveSeason(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var list = seasons
+        list.move(fromOffsets: source, toOffset: destination)
+        seasonOrder = list
+        persistSeasonOrder()
+        markSeasonsNeedsPush()
+        pushSeasonsToCloud()
+    }
+
+    private func persistSeasonOrder() {
+        UserDefaults.standard.set(seasonOrder, forKey: GameStore.seasonOrderKey)
     }
 
     private static func fileURL() throws -> URL {
@@ -114,6 +146,12 @@ class GameStore: ObservableObject {
     }
 
     func removeSeason(named seasonName: String) async throws {
+        if let index = seasonOrder.firstIndex(of: seasonName) {
+            seasonOrder.remove(at: index)
+            persistSeasonOrder()
+            markSeasonsNeedsPush()
+            pushSeasonsToCloud()
+        }
         let affectedGameTimes = storage
             .filter { $0.seasonName == seasonName }
             .map { $0.gameTime }
@@ -171,6 +209,8 @@ class GameStore: ObservableObject {
 
         await flushPendingCloudDeletes()
 
+        await syncSeasons()
+
         // Pull games recorded or edited on other devices
         guard let cloudGames = try? await cloudStore.fetchAllGames() else { return }
         let pendingDeletes = pendingCloudDeletes()
@@ -225,6 +265,59 @@ class GameStore: ObservableObject {
         }
     }
 
+    private func pushSeasonsToCloud() {
+        Task {
+            guard await cloudStore.accountAvailable() else { return }
+            if await cloudStore.saveSeasons(seasons) {
+                clearSeasonsNeedsPush()
+            }
+        }
+    }
+
+    /// Reconciles the local season ordering with iCloud. When this device has
+    /// pending changes its order wins; otherwise the cloud order is adopted.
+    /// Either way seasons present on only one side are preserved (appended).
+    private func syncSeasons() async {
+        let cloudSeasons = (try? await cloudStore.fetchSeasons()) ?? nil
+        let localSeasons = seasons
+
+        guard let cloudSeasons = cloudSeasons else {
+            // No cloud record yet; seed it from whatever this device has.
+            if localSeasons.isEmpty == false, await cloudStore.saveSeasons(localSeasons) {
+                clearSeasonsNeedsPush()
+            }
+            return
+        }
+
+        let preferLocalOrder = seasonsNeedsPush()
+        let merged = preferLocalOrder
+            ? mergeSeasons(primary: localSeasons, secondary: cloudSeasons)
+            : mergeSeasons(primary: cloudSeasons, secondary: localSeasons)
+
+        if merged != seasons {
+            seasonOrder = merged
+            persistSeasonOrder()
+        }
+
+        if merged != cloudSeasons {
+            if await cloudStore.saveSeasons(merged) {
+                clearSeasonsNeedsPush()
+            }
+        }
+        else {
+            clearSeasonsNeedsPush()
+        }
+    }
+
+    /// Returns `primary` followed by any seasons that appear only in `secondary`.
+    private func mergeSeasons(primary: [String], secondary: [String]) -> [String] {
+        var result = primary
+        for season in secondary where result.contains(season) == false {
+            result.append(season)
+        }
+        return result
+    }
+
     private func flushPendingCloudDeletes() async {
         var pending = pendingCloudDeletes()
         guard !pending.isEmpty else { return }
@@ -268,6 +361,18 @@ class GameStore: ObservableObject {
 
     private func savePendingCloudDeletes(_ gameTimes: Set<TimeInterval>) {
         UserDefaults.standard.set(Array(gameTimes), forKey: GameStore.pendingCloudDeletesKey)
+    }
+
+    private func seasonsNeedsPush() -> Bool {
+        UserDefaults.standard.bool(forKey: GameStore.seasonsNeedsPushKey)
+    }
+
+    private func markSeasonsNeedsPush() {
+        UserDefaults.standard.set(true, forKey: GameStore.seasonsNeedsPushKey)
+    }
+
+    private func clearSeasonsNeedsPush() {
+        UserDefaults.standard.set(false, forKey: GameStore.seasonsNeedsPushKey)
     }
 }
 
