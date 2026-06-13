@@ -9,6 +9,9 @@ import SwiftUI
 struct SaveGamePopupView: View {
 
     let seasons: [String]
+    var title: String = "Game has been saved!"
+    var subtitle: String = "Go to Seasons to view your game"
+    var confirmButtonTitle: String = "Done"
     let onConfirm: (String) -> Void
 
     @State private var selectedSeason: String = ""
@@ -22,10 +25,10 @@ struct SaveGamePopupView: View {
 
             VStack(spacing: 0) {
                 VStack(spacing: 8) {
-                    Text("Game has been saved!")
+                    Text(title)
                         .font(.headline)
                         .multilineTextAlignment(.center)
-                    Text("Go to Seasons to view your game")
+                    Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -73,7 +76,7 @@ struct SaveGamePopupView: View {
                         onConfirm(season)
                     },
                     label: {
-                        Text("Save Game")
+                        Text(confirmButtonTitle)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                     }

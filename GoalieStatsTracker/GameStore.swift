@@ -18,9 +18,15 @@ class GameStore: ObservableObject {
 
     private static let syncedGameTimesKey = "GameStore.syncedGameTimes"
     private static let pendingCloudDeletesKey = "GameStore.pendingCloudDeletes"
+    private static let createdSeasonsKey = "GameStore.createdSeasons"
+
+    // Seasons the user has created that may not yet contain any games. Seasons
+    // are otherwise derived from the games that reference them.
+    @Published private var createdSeasons: [String] =
+        UserDefaults.standard.stringArray(forKey: GameStore.createdSeasonsKey) ?? []
 
     var seasons: [String] {
-        var result: [String] = []
+        var result: [String] = createdSeasons
         for game in storage {
             let name = game.seasonName
             if name.isEmpty == false && result.contains(name) == false {
@@ -28,6 +34,13 @@ class GameStore: ObservableObject {
             }
         }
         return result
+    }
+
+    func addSeason(named name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard trimmed.isEmpty == false, seasons.contains(trimmed) == false else { return }
+        createdSeasons.append(trimmed)
+        UserDefaults.standard.set(createdSeasons, forKey: GameStore.createdSeasonsKey)
     }
 
     private static func fileURL() throws -> URL {
@@ -114,6 +127,10 @@ class GameStore: ObservableObject {
     }
 
     func removeSeason(named seasonName: String) async throws {
+        if let index = createdSeasons.firstIndex(of: seasonName) {
+            createdSeasons.remove(at: index)
+            UserDefaults.standard.set(createdSeasons, forKey: GameStore.createdSeasonsKey)
+        }
         let affectedGameTimes = storage
             .filter { $0.seasonName == seasonName }
             .map { $0.gameTime }
