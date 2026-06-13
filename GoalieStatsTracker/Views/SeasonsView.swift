@@ -50,6 +50,9 @@ struct SeasonsView: View {
                         await deleteSeason(offsets: indexes)
                     }
                 }
+                .onMove { source, destination in
+                    gameStore.moveSeason(fromOffsets: source, toOffset: destination)
+                }
                 if gameStore.storage.contains(where: { $0.seasonName.isEmpty }) {
                     NavigationLink {
                         LoadPastView(seasonName: "")
@@ -61,6 +64,9 @@ struct SeasonsView: View {
                 }
             }
             .navigationTitle("Seasons")
+            .toolbar {
+                EditButton()
+            }
             .alert("Create New Season", isPresented: $showNewSeasonAlert) {
                 TextField("Season name", text: $newSeasonName)
                 Button("Cancel", role: .cancel) {}
