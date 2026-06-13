@@ -171,22 +171,35 @@ class GameStore: ObservableObject {
 
         await flushPendingCloudDeletes()
 
-        // Pull games recorded on other devices
+        // Pull games recorded or edited on other devices
         guard let cloudGames = try? await cloudStore.fetchAllGames() else { return }
         let pendingDeletes = pendingCloudDeletes()
         var synced = syncedGameTimes()
-        var localGameTimes = Set(storage.map { $0.gameTime })
-        var pulledNewGames = false
+        var indexByGameTime: [TimeInterval: Int] = [:]
+        for (index, game) in storage.enumerated() {
+            indexByGameTime[game.gameTime] = index
+        }
+        var storageChanged = false
         for cloudGame in cloudGames {
-            if pendingDeletes.contains(cloudGame.gameTime) || localGameTimes.contains(cloudGame.gameTime) {
+            if pendingDeletes.contains(cloudGame.gameTime) {
+                continue
+            }
+            if let index = indexByGameTime[cloudGame.gameTime] {
+                // Game already on this device. Adopt the cloud copy only when the
+                // local copy is clean (in the synced set). A game with unpushed
+                // local edits isn't in the synced set, so we keep it and let its
+                // own push overwrite the cloud record.
+                if synced.contains(cloudGame.gameTime) {
+                    storage[index] = cloudGame
+                    storageChanged = true
+                }
                 continue
             }
             storage.append(cloudGame)
-            localGameTimes.insert(cloudGame.gameTime)
             synced.insert(cloudGame.gameTime)
-            pulledNewGames = true
+            storageChanged = true
         }
-        if pulledNewGames {
+        if storageChanged {
             storage.sort { $0.gameTime > $1.gameTime }
             if let data = try? JSONEncoder().encode(storage), let outfile = try? Self.fileURL() {
                 try? data.write(to: outfile)
