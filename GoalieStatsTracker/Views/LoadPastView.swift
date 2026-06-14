@@ -107,14 +107,9 @@ struct LoadPastView: View {
     
     func deleteGame(offsets: IndexSet) async {
         do {
-            let gamesToDelete = offsets.map { games[$0] }
+            let gamesToRemove = offsets.map { games[$0] }
             games.remove(atOffsets: offsets)
-            let storageOffsets = IndexSet(
-                gameStore.storage.enumerated()
-                    .filter { gamesToDelete.contains($0.element) }
-                    .map { $0.offset }
-            )
-            try await gameStore.remove(offsets: storageOffsets)
+            try await gameStore.remove(games: gamesToRemove)
         }
         catch {
             fatalError(error.localizedDescription)

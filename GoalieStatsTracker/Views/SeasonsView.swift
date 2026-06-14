@@ -15,9 +15,21 @@ struct SeasonsView: View {
 
     @EnvironmentObject var gameStore: GameStore
 
+    @State private var showNewSeasonPopup = false
+    @State private var newSeasonName = ""
+
     var body: some View {
-        GeometryReader { proxy in
+        ZStack {
+            GeometryReader { proxy in
             List {
+                Button {
+                    newSeasonName = ""
+                    showNewSeasonPopup = true
+                } label: {
+                    Label("Create New Season", systemImage: "plus.circle.fill")
+                        .font(.system(size: proxy.size.height * 0.02, weight: .semibold))
+                        .foregroundStyle(.teal)
+                }
                 ForEach(gameStore.seasons, id: \.self) { season in
                     NavigationLink {
                         LoadPastView(seasonName: season)
@@ -39,6 +51,9 @@ struct SeasonsView: View {
                         await deleteSeason(offsets: indexes)
                     }
                 }
+                .onMove { source, destination in
+                    gameStore.moveSeason(fromOffsets: source, toOffset: destination)
+                }
                 if gameStore.storage.contains(where: { $0.seasonName.isEmpty }) {
                     NavigationLink {
                         LoadPastView(seasonName: "")
@@ -50,6 +65,65 @@ struct SeasonsView: View {
                 }
             }
             .navigationTitle("Seasons")
+            .toolbar {
+                EditButton()
+            }
+            }
+
+            if showNewSeasonPopup {
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: 0) {
+                        VStack(spacing: 8) {
+                            Text("Create New Season")
+                                .font(.headline)
+                                .multilineTextAlignment(.center)
+                            Text("Enter a name for the new season")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                            TextField("Season name", text: $newSeasonName)
+                                .textFieldStyle(.roundedBorder)
+                                .foregroundColor(.teal)
+                                .padding(.top, 8)
+                        }
+                        .padding()
+
+                        Divider()
+
+                        HStack(spacing: 0) {
+                            Button(role: .cancel) {
+                                showNewSeasonPopup = false
+                            } label: {
+                                Text("Cancel")
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            Divider()
+                                .frame(height: 44)
+                            Button {
+                                let name = newSeasonName.trimmingCharacters(in: .whitespaces)
+                                showNewSeasonPopup = false
+                                if name.isEmpty == false {
+                                    gameStore.addSeason(named: name)
+                                }
+                            } label: {
+                                Text("Create")
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: 300)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(Color(UIColor.systemBackground))
+                    )
+                    .padding(40)
+                }
+            }
         }
         .task {
             do {

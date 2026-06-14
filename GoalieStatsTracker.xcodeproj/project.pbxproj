@@ -27,6 +27,7 @@
 		03E507C32AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */; };
 		7EA062F02FCC9B9300C1332E /* GoalieSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */; };
 		7EA062F22FCC9B9300C1332E /* SaveGamePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */; };
+		7EA062F32FCCA10000C1332E /* CloudGameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F22FCCA10000C1332E /* CloudGameStore.swift */; };
 		7EA062F42FCC9B9300C1332E /* SeasonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA062F32FCC9B9300C1332E /* SeasonsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -70,7 +71,9 @@
 		03E507C02AC6795000134DD0 /* GoalieStatsTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITests.swift; sourceTree = "<group>"; };
 		03E507C22AC6795000134DD0 /* GoalieStatsTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieStatsTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7EA062EF2FCC9B9300C1332E /* GoalieSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalieSelectorView.swift; sourceTree = "<group>"; };
+		7EA062F02FCC9C1100C1332E /* GoalieStatsTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoalieStatsTracker.entitlements; sourceTree = "<group>"; };
 		7EA062F12FCC9B9300C1332E /* SaveGamePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveGamePopupView.swift; sourceTree = "<group>"; };
+		7EA062F22FCCA10000C1332E /* CloudGameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGameStore.swift; sourceTree = "<group>"; };
 		7EA062F32FCC9B9300C1332E /* SeasonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,9 +145,11 @@
 		03E507A42AC6794F00134DD0 /* GoalieStatsTracker */ = {
 			isa = PBXGroup;
 			children = (
+				7EA062F02FCC9C1100C1332E /* GoalieStatsTracker.entitlements */,
 				038BF2E72AC67DA30047DDF3 /* Views */,
 				036D72622AE41D8B000E50C6 /* ShotsData.swift */,
 				030670E32AFF0BC9007F82EF /* GameStore.swift */,
+				7EA062F22FCCA10000C1332E /* CloudGameStore.swift */,
 				03E507A52AC6794F00134DD0 /* GoalieStatsTrackerApp.swift */,
 				03E507A92AC6795000134DD0 /* Assets.xcassets */,
 				03E507AB2AC6795000134DD0 /* Preview Content */,
@@ -321,6 +326,7 @@
 				7EA062F42FCC9B9300C1332E /* SeasonsView.swift in Sources */,
 				034585FF2B57042B00528EC3 /* GameTitleView.swift in Sources */,
 				030670E42AFF0BC9007F82EF /* GameStore.swift in Sources */,
+				7EA062F32FCCA10000C1332E /* CloudGameStore.swift in Sources */,
 				034585F12B56407800528EC3 /* ShotSelectorsView.swift in Sources */,
 				034585F52B56FC0C00528EC3 /* FieldView.swift in Sources */,
 			);
@@ -482,6 +488,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoalieStatsTracker/GoalieStatsTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GoalieStatsTracker/Preview Content\"";
@@ -500,7 +507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sanyaarora2025.lax-goalie";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -514,6 +521,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoalieStatsTracker/GoalieStatsTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GoalieStatsTracker/Preview Content\"";
@@ -532,7 +540,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sanyaarora2025.lax-goalie";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

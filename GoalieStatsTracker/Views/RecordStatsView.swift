@@ -21,6 +21,10 @@ struct RecordStatsView: View {
 
     @State var showSavePopup: Bool = false
 
+    @State private var showAddSeasonPopup: Bool = false
+
+    @State private var showChangeSeasonPopup: Bool = false
+
     // shotsData is a class held in @State, so mutating its seasonName alone
     // does not re-render this view; this gets toggled to force the refresh
     @State private var seasonAssignmentRefresh: Bool = false
@@ -78,17 +82,30 @@ struct RecordStatsView: View {
                         }
                         .disabled(disable)
 
-                        if loadPastView == true && shotsData.seasonName.isEmpty && gameStore.seasons.isEmpty == false {
+                        if loadPastView == true && shotsData.seasonName.isEmpty {
                             Spacer()
                                 .frame(height: proxy.size.height * 0.02)
-                            Menu {
-                                ForEach(gameStore.seasons, id: \.self) { season in
-                                    Button(season) {
-                                        addGameToSeason(season)
-                                    }
-                                }
+                            Button {
+                                showAddSeasonPopup = true
                             } label: {
                                 Text("Add Game to Season")
+                                    .foregroundStyle(.teal)
+                                    .font(.system(size: proxy.size.height * 0.0225))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: proxy.size.width * 0.02)
+                                            .stroke(Color.gray, lineWidth: proxy.size.height * 0.004)
+                                            .frame(width: proxy.size.width * 0.45, height: proxy.size.height * 0.045)
+                                    )
+                            }
+                            Spacer()
+                                .frame(height: proxy.size.height * 0.02)
+                        } else if loadPastView == true && shotsData.seasonName.isEmpty == false && gameStore.seasons.isEmpty == false {
+                            Spacer()
+                                .frame(height: proxy.size.height * 0.02)
+                            Button {
+                                showChangeSeasonPopup = true
+                            } label: {
+                                Text("Change Season")
                                     .foregroundStyle(.teal)
                                     .font(.system(size: proxy.size.height * 0.0225))
                                     .overlay(
@@ -118,6 +135,34 @@ struct RecordStatsView: View {
                             fatalError(error.localizedDescription)
                         }
                         presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+
+            if showAddSeasonPopup {
+                SaveGamePopupView(
+                    seasons: gameStore.seasons,
+                    title: "Add Game to Season",
+                    subtitle: "Pick a season for this game",
+                    confirmButtonTitle: "Done"
+                ) { seasonName in
+                    showAddSeasonPopup = false
+                    if seasonName.isEmpty == false {
+                        addGameToSeason(seasonName)
+                    }
+                }
+            }
+
+            if showChangeSeasonPopup {
+                SaveGamePopupView(
+                    seasons: gameStore.seasons,
+                    title: "Change Season",
+                    subtitle: "Pick a season for this game",
+                    confirmButtonTitle: "Done"
+                ) { seasonName in
+                    showChangeSeasonPopup = false
+                    if seasonName.isEmpty == false {
+                        addGameToSeason(seasonName)
                     }
                 }
             }
