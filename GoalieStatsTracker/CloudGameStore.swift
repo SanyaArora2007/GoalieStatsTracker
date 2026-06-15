@@ -115,6 +115,20 @@ class CloudGameStore {
         return games
     }
 
+    /// Returns whether a game record still exists in iCloud. Uses a
+    /// strongly-consistent fetch by record ID so a recently-pushed record is
+    /// never mistaken for a deleted one — CKQuery results lag recent writes,
+    /// but record(for:) does not.
+    func gameExists(gameTime: TimeInterval) async throws -> Bool {
+        do {
+            _ = try await database.record(for: CloudGameStore.recordID(for: gameTime))
+            return true
+        }
+        catch let error as CKError where error.code == .unknownItem {
+            return false
+        }
+    }
+
     func deleteGame(gameTime: TimeInterval) async throws {
         do {
             try await database.deleteRecord(withID: CloudGameStore.recordID(for: gameTime))
