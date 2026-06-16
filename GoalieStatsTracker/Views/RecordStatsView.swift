@@ -185,6 +185,28 @@ struct RecordStatsView: View {
         }
     }
 
+    // Upgrades a legacy (schema v0) game to normalized coordinates once the
+    // field width is known, then persists the upgrade. `pointsOn12Meter` is the
+    // array actually rendered, so it must be re-synced from the upgraded shots.
+    func migrateLegacyCoordinatesIfNeeded() {
+        guard shotsData.migrateCoordinatesIfNeeded() else { return }
+        pointsOn12Meter = shotsData.shots
+        let game = shotsData
+        let isPastGame = loadPastView
+        Task {
+            do {
+                if isPastGame {
+                    try await gameStore.update(game: game)
+                } else {
+                    try await gameStore.saveOngoingGame(game: game)
+                }
+            }
+            catch {
+                // don't surface errors during a one-time upgrade
+            }
+        }
+    }
+
     func persistGoalieChange() {
         pointsOn12Meter = shotsData.shots
         let game = shotsData

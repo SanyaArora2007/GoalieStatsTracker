@@ -25,6 +25,13 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     
     static let defaultGoalieName: String = "Me"
 
+    // Schema version for the persisted payload. Version 1 stores shot
+    // coordinates normalized as a fraction of the field width so they render
+    // correctly across devices with different screen sizes. Version 0 (absent)
+    // stored raw screen points captured on a single device.
+    static let currentSchemaVersion: Int = 1
+    var schemaVersion: Int = ShotsData.currentSchemaVersion
+
     @Published var runningScore: Float = 0
     @Published var totalShots: Int = 0
     @Published var saves: Int = 0
@@ -46,11 +53,12 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
     }
     
     enum CodingKeys: CodingKey {
-        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField, goalies, seasonName
+        case runningScore, totalShots, saves, savePercentage, shots, gameName, gameTime, womensField, goalies, seasonName, schemaVersion
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(schemaVersion, forKey: .schemaVersion)
         try container.encode(runningScore, forKey: .runningScore)
         try container.encode(totalShots, forKey: .totalShots)
         try container.encode(saves, forKey: .saves)
@@ -81,6 +89,8 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         }
         goalies = (try? container.decode([String].self, forKey: .goalies)) ?? [ShotsData.defaultGoalieName]
         seasonName = (try? container.decode(String.self, forKey: .seasonName)) ?? ""
+        // A payload without a version predates normalized coordinates.
+        schemaVersion = (try? container.decode(Int.self, forKey: .schemaVersion)) ?? 0
     }
     
     required init() {
@@ -107,6 +117,48 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
         else {
             self.halfYCoordinate = menTransitionMark * ratio
         }
+    }
+
+    // Converts a screen-space tap point into a screen-size-agnostic coordinate
+    // stored as a fraction of the field width. Everything in the field view
+    // scales linearly with fieldWidth, so a single factor round-trips exactly.
+    func normalize(_ point: CGPoint) -> CGPoint {
+        guard fieldWidth > 0 else { return point }
+        return CGPoint(x: point.x / fieldWidth, y: point.y / fieldWidth)
+    }
+
+    // Reverses `normalize`, turning a stored fraction back into a point in the
+    // current field view's coordinate space.
+    func denormalize(_ point: CGPoint) -> CGPoint {
+        return CGPoint(x: point.x * fieldWidth, y: point.y * fieldWidth)
+    }
+
+    // The point at which a stored shot should be drawn. Version 1 shots are
+    // normalized and must be scaled to the current field; legacy (version 0)
+    // shots are still raw screen points and render as-is — which is correct on
+    // the device that recorded them, where they get upgraded on first view.
+    func displayCoordinate(for shot: Shot) -> CGPoint {
+        if schemaVersion >= ShotsData.currentSchemaVersion {
+            return denormalize(shot.coordinate)
+        }
+        return shot.coordinate
+    }
+
+    // Upgrades a legacy game in place by normalizing its raw shot coordinates
+    // using the current fieldWidth. This is exact when the upgrade happens on a
+    // device whose field width matches the one used to record the game.
+    // Returns whether anything changed so callers can persist the upgrade.
+    func migrateCoordinatesIfNeeded() -> Bool {
+        guard schemaVersion < ShotsData.currentSchemaVersion, fieldWidth > 0 else {
+            return false
+        }
+        shots = shots.map { shot in
+            var upgraded = shot
+            upgraded.coordinate = normalize(shot.coordinate)
+            return upgraded
+        }
+        schemaVersion = ShotsData.currentSchemaVersion
+        return true
     }
     
     struct Shot: Codable, Hashable {
@@ -245,8 +297,9 @@ class ShotsData: ObservableObject, Codable, Identifiable, Hashable {
             return nil
         }
         let grid = whichGrid(coordinate: location)
-        print("girf: \(grid)")
-        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: location, goalieName: goalieName)
+        // Bounds and grid are decided in screen space above; the coordinate is
+        // persisted normalized so it renders correctly on any screen size.
+        let shot = Shot(wasItAGoal: goal, wasItEightMeter: eightMeter, gridItCameFrom: grid, coordinate: normalize(location), goalieName: goalieName)
         runningScore += shot.calculateScore()
         totalShots += 1
         

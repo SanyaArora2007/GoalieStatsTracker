@@ -20,6 +20,9 @@ class GameStore: ObservableObject {
     private static let pendingCloudDeletesKey = "GameStore.pendingCloudDeletes"
     private static let seasonOrderKey = "GameStore.seasonOrder"
     private static let seasonsNeedsPushKey = "GameStore.seasonsNeedsPush"
+    // The season list as it last stood in iCloud. Acts as the common ancestor
+    // for a three-way merge so deletions can be told apart from additions.
+    private static let seasonsBaselineKey = "GameStore.seasonsBaseline"
 
     // The user-controlled ordering of seasons. This is the source of truth for
     // order and lets seasons exist before any game references them; names found
@@ -239,6 +242,32 @@ class GameStore: ObservableObject {
             synced.insert(cloudGame.gameTime)
             storageChanged = true
         }
+
+        // Reconcile deletions made on other devices: a game we previously synced
+        // that is now absent from the cloud was deleted elsewhere. Confirm each
+        // one with a strongly-consistent fetch before removing it locally, so a
+        // record that's merely lagging the query index isn't wrongly dropped.
+        let cloudGameTimes = Set(cloudGames.map { $0.gameTime })
+        let deletionCandidates = storage.filter {
+            synced.contains($0.gameTime)
+                && cloudGameTimes.contains($0.gameTime) == false
+                && pendingDeletes.contains($0.gameTime) == false
+        }
+        var remotelyDeleted: Set<TimeInterval> = []
+        for game in deletionCandidates {
+            if let stillExists = try? await cloudStore.gameExists(gameTime: game.gameTime),
+               stillExists == false {
+                remotelyDeleted.insert(game.gameTime)
+            }
+        }
+        if remotelyDeleted.isEmpty == false {
+            storage.removeAll { remotelyDeleted.contains($0.gameTime) }
+            for gameTime in remotelyDeleted {
+                synced.remove(gameTime)
+            }
+            storageChanged = true
+        }
+
         if storageChanged {
             storage.sort { $0.gameTime > $1.gameTime }
             if let data = try? JSONEncoder().encode(storage), let outfile = try? Self.fileURL() {
@@ -274,27 +303,46 @@ class GameStore: ObservableObject {
         }
     }
 
-    /// Reconciles the local season ordering with iCloud. When this device has
-    /// pending changes its order wins; otherwise the cloud order is adopted.
-    /// Either way seasons present on only one side are preserved (appended).
+    /// Reconciles the explicit season ordering with iCloud using a three-way
+    /// merge against the last-synced baseline, so a season deleted on one device
+    /// is removed everywhere instead of being resurrected by a plain union.
+    /// `seasonOrder` (not the derived `seasons`) is the unit of sync; seasons
+    /// that exist only because a game references them stay a local concern.
     private func syncSeasons() async {
         let cloudSeasons = (try? await cloudStore.fetchSeasons()) ?? nil
-        let localSeasons = seasons
+        let localSeasons = seasonOrder
 
         guard let cloudSeasons = cloudSeasons else {
-            // No cloud record yet; seed it from whatever this device has.
-            if localSeasons.isEmpty == false, await cloudStore.saveSeasons(localSeasons) {
+            // No cloud record yet; seed it from whatever this device has,
+            // including game-derived names so nothing is lost on first sync.
+            let seed = seasons
+            if seed.isEmpty == false, await cloudStore.saveSeasons(seed) {
                 clearSeasonsNeedsPush()
+                saveSeasonsBaseline(seed)
             }
             return
         }
 
         let preferLocalOrder = seasonsNeedsPush()
-        let merged = preferLocalOrder
-            ? mergeSeasons(primary: localSeasons, secondary: cloudSeasons)
-            : mergeSeasons(primary: cloudSeasons, secondary: localSeasons)
+        let merged: [String]
+        if let baseline = seasonsBaseline() {
+            merged = threeWayMergeSeasons(
+                baseline: baseline,
+                local: localSeasons,
+                cloud: cloudSeasons,
+                preferLocalOrder: preferLocalOrder
+            )
+        }
+        else {
+            // No baseline yet (first sync after upgrade): fall back to a union so
+            // we don't misread pre-existing seasons as deletions, then record a
+            // baseline for next time.
+            merged = preferLocalOrder
+                ? mergeSeasons(primary: localSeasons, secondary: cloudSeasons)
+                : mergeSeasons(primary: cloudSeasons, secondary: localSeasons)
+        }
 
-        if merged != seasons {
+        if merged != seasonOrder {
             seasonOrder = merged
             persistSeasonOrder()
         }
@@ -302,11 +350,39 @@ class GameStore: ObservableObject {
         if merged != cloudSeasons {
             if await cloudStore.saveSeasons(merged) {
                 clearSeasonsNeedsPush()
+                saveSeasonsBaseline(merged)
             }
         }
         else {
             clearSeasonsNeedsPush()
+            saveSeasonsBaseline(merged)
         }
+    }
+
+    /// Three-way merge of season lists. An entry present in the baseline is kept
+    /// only if it still survives on both sides; missing on either side means it
+    /// was deleted there. Entries absent from the baseline are additions and are
+    /// always kept. Order follows the side with pending changes.
+    private func threeWayMergeSeasons(baseline: [String], local: [String], cloud: [String], preferLocalOrder: Bool) -> [String] {
+        let baselineSet = Set(baseline)
+        let localSet = Set(local)
+        let cloudSet = Set(cloud)
+
+        func keep(_ season: String) -> Bool {
+            if baselineSet.contains(season) {
+                return localSet.contains(season) && cloudSet.contains(season)
+            }
+            return true
+        }
+
+        let primary = preferLocalOrder ? local : cloud
+        let secondary = preferLocalOrder ? cloud : local
+        var result: [String] = []
+        var seen: Set<String> = []
+        for season in primary + secondary where keep(season) && seen.insert(season).inserted {
+            result.append(season)
+        }
+        return result
     }
 
     /// Returns `primary` followed by any seasons that appear only in `secondary`.
@@ -373,6 +449,14 @@ class GameStore: ObservableObject {
 
     private func clearSeasonsNeedsPush() {
         UserDefaults.standard.set(false, forKey: GameStore.seasonsNeedsPushKey)
+    }
+
+    private func seasonsBaseline() -> [String]? {
+        UserDefaults.standard.stringArray(forKey: GameStore.seasonsBaselineKey)
+    }
+
+    private func saveSeasonsBaseline(_ seasons: [String]) {
+        UserDefaults.standard.set(seasons, forKey: GameStore.seasonsBaselineKey)
     }
 }
 
