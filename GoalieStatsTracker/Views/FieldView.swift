@@ -48,7 +48,7 @@ struct FieldView: View {
                 .scaledToFit()
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)
             ForEach(_parent.pointsOn12Meter.filter { $0.goalieName == _parent.selectedGoalieName }, id: \.self) { shot in
-                ClickedCircle(currentLocation: shot.coordinate, circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
+                ClickedCircle(currentLocation: _parent.shotsData.displayCoordinate(for: shot), circleColor: circleColor(wasItAGoal: shot.wasItAGoal, wasItA8Meter: shot.wasItEightMeter), geometry: _geometry)
             }
             if _parent.loadPastView == false {
                 Button(
@@ -83,6 +83,11 @@ struct FieldView: View {
         .fixedSize(horizontal: false, vertical: true)
         .contentShape(Rectangle())
         .gesture(draw12MeterCircle)
+        .onAppear {
+            // fieldWidth was set in init, so a legacy game can now be upgraded
+            // to normalized coordinates using this device's field width.
+            _parent.migrateLegacyCoordinatesIfNeeded()
+        }
 
         Divider()
     }
